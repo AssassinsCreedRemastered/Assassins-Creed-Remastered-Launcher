@@ -494,7 +494,7 @@ namespace ACRemasteredLauncher
                         default:
                             break;
                         case "CryNation":
-                            sw.Write("Add_true:" + InstallationFolder + @"\Mods\AC1 Overhaul\AC1 CryNation.tpf" + "\n");
+                            sw.Write("Add_true:" + InstallationFolder + @"\Mods\CryNation\AC1 CryNation.tpf" + "\n");
                             break;
                         case "Overhaul":
                             sw.Write("Add_true:" + InstallationFolder + @"\Mods\AC1 Overhaul\Assassin's Creed Overhaul 2016 Full Version.tpf" + "\n");
@@ -502,7 +502,7 @@ namespace ACRemasteredLauncher
                     }
                     if (PS3Icons.Visibility == Visibility.Visible && PS3Icons.IsChecked == true)
                     {
-                        sw.Write("Add_true:" + InstallationFolder + @"\Mods\AC1 Overhaul\AC1 PS Buttons.tpf" + "\n");
+                        sw.Write("Add_true:" + InstallationFolder + @"\Mods\PS3 Buttons\AC1 PS Buttons.tpf" + "\n");
                     }
                 }
             }
