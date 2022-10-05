@@ -29,7 +29,7 @@ namespace ACRemasteredLauncher
         bool GraphicsModEnabled = false;
         string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string InstallationDirectory = Directory.GetCurrentDirectory();
-
+        bool DirectX10Enabled = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,7 +43,18 @@ namespace ACRemasteredLauncher
             {
                 using (StreamReader sr = new StreamReader(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                 {
-                    InstallationDirectory = sr.ReadLine();
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        string[] split = line.Split('=');
+                        if (split[0].StartsWith("InstallationDirectory"))
+                        {
+                            InstallationDirectory = split[1];
+                            break;
+                        }
+                        line = sr.ReadLine();
+                    }
+
                 }
             }
             GC.Collect();
@@ -59,7 +70,8 @@ namespace ACRemasteredLauncher
                 {
                     using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                     {
-                        sw.Write(InstallationDirectory);
+                        sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
+                        sw.WriteLine("DirectX10=False");
                     }
                 }
             }
@@ -70,7 +82,8 @@ namespace ACRemasteredLauncher
                     FirstRun = true;
                     using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                     {
-                        sw.Write(InstallationDirectory);
+                        sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
+                        sw.WriteLine("DirectX10=False");
                     }
                 }
             }
@@ -140,7 +153,15 @@ namespace ACRemasteredLauncher
             TexMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\OpenTexMod\";
             TexMod.StartInfo.FileName = "OpenTexMod.exe";
             Game.StartInfo.WorkingDirectory = InstallationDirectory;
-            Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+            string game;
+            if (DirectX10Enabled)
+            {
+                game = "AssassinsCreed_Dx10.exe";
+            } else
+            {
+                game = "AssassinsCreed_Dx9.exe";
+            }
+            Game.StartInfo.FileName = game;
             if (GraphicsModEnabled)
             {
                 TexMod.Start();
@@ -162,6 +183,10 @@ namespace ACRemasteredLauncher
             if (optionsWindow.PS3Icons.IsChecked == true)
             {
                 PS3Icons = true;
+            }
+            if (optionsWindow.UseDirectX10.IsChecked == true)
+            {
+                DirectX10Enabled = true;
             }
             if (GraphicsMod == "Original" && PS3Icons == false)
             {

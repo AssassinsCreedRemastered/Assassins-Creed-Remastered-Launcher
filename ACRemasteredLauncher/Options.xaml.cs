@@ -35,11 +35,12 @@ namespace ACRemasteredLauncher
         List<string> ReShade = new List<string>();
         Dictionary<string, List<string>> ReShadePresets = new Dictionary<string, List<string>>();
         Resolutions MonitorsSpecifications = new Resolutions();
-        string InstallationFolder = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
+        string InstallationFolder;
         string CurrentIntroQuality;
         public Options()
         {
             InitializeComponent();
+            LauncherConfig();
             FillComboBoxes();
             FindResolution();
             LoadSettings();
@@ -47,6 +48,39 @@ namespace ACRemasteredLauncher
         }
 
         //Load Settings
+        private void LauncherConfig()
+        {
+            string[] LauncherConfig = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
+            foreach (string config in LauncherConfig)
+            {
+                List<string> split = new List<string>();
+                switch (config)
+                {
+                    default:
+                        break;
+                    case string InstallationPath when InstallationPath.StartsWith("InstallationDirectory="):
+                        split = config.Split('=').ToList();
+                        InstallationFolder = split[1];
+                        split.Clear();
+                        break;
+                    case string directx when directx.StartsWith("DirectX10"):
+                        split = config.Split('=').ToList();
+                        if (split[1] == "True")
+                        {
+                            UseDirectX10.IsChecked = true;
+                            FullScreen.Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            UseDirectX10.IsChecked = false;
+                            FullScreen.Visibility = Visibility.Hidden;
+                        }
+                        split.Clear();
+                        break;
+                }
+            }
+            GC.Collect();
+        }
         private void FillComboBoxes()
         {
             FindInstalledReShadePresets();
@@ -257,7 +291,17 @@ namespace ACRemasteredLauncher
                 if (line.StartsWith("PresetPath"))
                 {
                     string[] tempSplit = line.Split('=');
-                    string test = tempSplit[1].Replace(".\\reshade-presets\\", "");
+                    string test;
+                    if (GraphicsModSelection.SelectedItem.ToString() == "Original")
+                    {
+                        test = tempSplit[1].Replace(".\\reshade-presets\\Custom\\", "");
+                        test = test.Replace(".ini", "");
+                    } else
+                    {
+                        test = tempSplit[1].Replace(".\\reshade-presets\\" + GraphicsModSelection.SelectedItem.ToString() + @"\", "");
+                        test = test.Replace(".ini", "");
+
+                    }
                     if (test.Length < 1)
                     {
                         ReShadePreset.SelectedIndex = -1;
@@ -361,6 +405,7 @@ namespace ACRemasteredLauncher
             SaveEaglePatch();
             GC.Collect();
             SaveQualityIntro();
+            SaveLauncherConfig();
         }
 
         private void SaveDisplay()
@@ -407,7 +452,7 @@ namespace ACRemasteredLauncher
                                 sw.Write("VSynch=" + VSync.SelectedIndex + "\r\n");
                                 break;
                             case string x when line.StartsWith("Fullscreen"):
-                                if (FullScreen.IsChecked == true)
+                                if (FullScreen.IsChecked == true && FullScreen.Visibility == Visibility.Visible)
                                 {
                                     sw.Write("Fullscreen=1" + "\r\n");
                                 } else
@@ -479,7 +524,13 @@ namespace ACRemasteredLauncher
                         {
                             if (ReShadePreset.Visibility == Visibility.Visible && ReShadePreset.SelectedIndex > -1)
                             {
-                                sw.Write("PresetPath=.\\reshade-presets\\" + ReShadePreset.SelectedItem.ToString() + ".ini" + "\r\n");
+                                if (GraphicsModSelection.SelectedItem.ToString() == "Original")
+                                {
+                                    sw.Write("PresetPath=.\\reshade-presets\\Custom\\" + ReShadePreset.SelectedItem.ToString() + ".ini" + "\r\n");
+                                } else
+                                {
+                                    sw.Write("PresetPath=.\\reshade-presets\\" + GraphicsModSelection.SelectedItem.ToString() + @"\" + ReShadePreset.SelectedItem.ToString() + ".ini" + "\r\n");
+                                }
                             } 
                             else
                             {
@@ -623,6 +674,39 @@ namespace ACRemasteredLauncher
             GC.Collect();
         }
 
+        private void SaveLauncherConfig()
+        {
+            using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config"))
+            {
+                using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\LauncherTemp.config"))
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        switch (line)
+                        {
+                            default:
+                                sw.WriteLine(line);
+                                break;
+                            case string x when line.StartsWith("DirectX10="):
+                                if (UseDirectX10.IsChecked == true)
+                                {
+                                    sw.WriteLine("DirectX10=True");
+                                } else
+                                {
+                                    sw.WriteLine("DirectX10=False");
+                                }
+                                break;
+
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+            }
+            File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
+            File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\LauncherTemp.config", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
+        }
+
         //Events
         private void OKButton_Click(object sender, RoutedEventArgs e)
         {
@@ -727,6 +811,16 @@ namespace ACRemasteredLauncher
                     {
                         ReShadePreset.Visibility = Visibility.Hidden;
                         ReShadeLabel.Visibility = Visibility.Hidden;
+                        if (PS3Icons.IsChecked == true)
+                        {
+                            ShowFPS.Visibility = Visibility.Hidden;
+                            ShowFrameTime.Visibility = Visibility.Hidden;
+                        }
+                        else
+                        {
+                            ShowFPS.Visibility = Visibility.Visible;
+                            ShowFrameTime.Visibility = Visibility.Visible;
+                        }
                     }
                     break;
             }
@@ -751,6 +845,17 @@ namespace ACRemasteredLauncher
             {
                 ShowFPS.Visibility = Visibility.Visible;
                 ShowFrameTime.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void UseDirectX10_Click(object sender, RoutedEventArgs e)
+        {
+            if (UseDirectX10.IsChecked == true)
+            {
+                FullScreen.Visibility = Visibility.Visible;
+            } else
+            {
+                FullScreen.Visibility = Visibility.Hidden;
             }
         }
     }
