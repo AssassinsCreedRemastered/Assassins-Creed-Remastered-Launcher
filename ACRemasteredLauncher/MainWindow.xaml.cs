@@ -180,22 +180,23 @@ namespace ACRemasteredLauncher
             Options optionsWindow = new Options();
             string GraphicsMod = optionsWindow.GraphicsModSelection.SelectedItem.ToString();
             bool PS3Icons = false;
+            optionsWindow.ShowDialog();
             if (optionsWindow.PS3Icons.IsChecked == true)
             {
                 PS3Icons = true;
+            }
+            if (GraphicsMod == "Original" && PS3Icons == false)
+            {
+                GraphicsModEnabled = false;
+            }
+            else if (PS3Icons == true || GraphicsMod != "Original")
+            {
+                GraphicsModEnabled = true;
             }
             if (optionsWindow.UseDirectX10.IsChecked == true)
             {
                 DirectX10Enabled = true;
             }
-            if (GraphicsMod == "Original" && PS3Icons == false)
-            {
-                GraphicsModEnabled = false;
-            } else if(PS3Icons == true || GraphicsMod != "Original")
-            {
-                GraphicsModEnabled = true;
-            }
-            optionsWindow.ShowDialog();
             optionsWindow.Close();
             GC.Collect();
         }
