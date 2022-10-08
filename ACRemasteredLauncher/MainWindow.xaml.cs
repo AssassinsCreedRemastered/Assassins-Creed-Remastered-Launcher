@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -29,7 +30,6 @@ namespace ACRemasteredLauncher
         bool GraphicsModEnabled = false;
         string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string InstallationDirectory = Directory.GetCurrentDirectory();
-        bool DirectX10Enabled = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -54,7 +54,6 @@ namespace ACRemasteredLauncher
                         }
                         line = sr.ReadLine();
                     }
-
                 }
             }
             GC.Collect();
@@ -71,7 +70,6 @@ namespace ACRemasteredLauncher
                     using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                     {
                         sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
-                        sw.WriteLine("DirectX10=False");
                     }
                 }
             }
@@ -83,7 +81,80 @@ namespace ACRemasteredLauncher
                     using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                     {
                         sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
-                        sw.WriteLine("DirectX10=False");
+                    }
+                } else
+                {
+                    using (StreamReader sr = new StreamReader(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
+                    {
+                        string line = sr.ReadLine();
+                        while (line != null)
+                        {
+                            string[] split = line.Split('=');
+                            if (split[0].StartsWith("InstallationDirectory"))
+                            {
+                                InstallationDirectory = split[1];
+                                break;
+                            }
+                            line = sr.ReadLine();
+                        }
+                    }
+                }
+            }
+            if (!System.IO.Directory.Exists(AppData + @"\uMod\"))
+            {
+                FirstRun = true;
+                System.IO.Directory.CreateDirectory(AppData + @"\uMod");
+                if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
+                {
+                    string ExecutableDirectory = InstallationDirectory + @"\AssassinsCreed_Dx9.exe";
+                    char[] array = ExecutableDirectory.ToCharArray();
+                    List<char> charList = new List<char>();
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            charList.Add(array[i]);
+                        }
+                        else
+                        {
+                            charList.Add('\0');
+                            charList.Add(array[i]);
+                        }
+                    }
+                    charList.Add('\0');
+                    char[] charArray = charList.ToArray();
+                    string ExecutablePath = new string(charArray);
+                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod\uMod_DX9.txt"))
+                    {
+                        sw.Write(ExecutablePath);
+                    }
+                }
+            } else
+            {
+                if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
+                {
+                    FirstRun = true;
+                    string ExecutableDirectory = InstallationDirectory + @"\AssassinsCreed_Dx9.exe";
+                    char[] array = ExecutableDirectory.ToCharArray();
+                    List<char> charList = new List<char>();
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            charList.Add(array[i]);
+                        }
+                        else
+                        {
+                            charList.Add('\0');
+                            charList.Add(array[i]);
+                        }
+                    }
+                    char[] charArray = charList.ToArray();
+                    string ExecutablePath = new string(charArray);
+                    //ExecutablePath = ExecutablePath.Replace("਍", "");
+                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod\uMod_DX9.txt"))
+                    {
+                        sw.Write(ExecutablePath);
                     }
                 }
             }
@@ -113,9 +184,7 @@ namespace ACRemasteredLauncher
 
         private void FirstRunSetup()
         {
-            MessageBox.Show("We need to go through first setup. Follow the steps and you'll be fine.");
-            Process.Start("notepad.exe", InstallationDirectory + @"\firstRun.txt");
-            using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\OpenTexMod\templates\ac1.txt"))
+            using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\uMod\templates\ac1.txt"))
             {
                 sw.Write("SaveAllTextures:0\n");
                 sw.Write("SaveSingleTexture:0\n");
@@ -123,18 +192,29 @@ namespace ACRemasteredLauncher
                 sw.Write("TextureColour:0,255,0\n");
                 sw.Write("Add_true:" + InstallationDirectory + @"\Mods\AC1 Overhaul\Assassin's Creed Overhaul 2016 Full Version.tpf" + "\n");
             }
-            Process TexMod = new Process();
-            Process Game = new Process();
-            TexMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\OpenTexMod\";
-            TexMod.StartInfo.FileName = "OpenTexMod.exe";
-            Game.StartInfo.WorkingDirectory = InstallationDirectory;
-            Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
-            TexMod.Start();
-            MessageBox.Show("Click OK when you finish Step 1.");
-            Game.Start();
-            Game.WaitForExit();
-            TexMod.CloseMainWindow();
-            Environment.Exit(0);
+            string SaveFile = InstallationDirectory + @"\AssassinsCreed_Dx9.exe" + "|" + InstallationDirectory + @"\Mods\uMod\templates\ac1.txt";
+            char[] array = SaveFile.ToCharArray();
+            List<char> charList = new List<char>();
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (i == 0)
+                {
+                    charList.Add(array[i]);
+                }
+                else
+                {
+                    charList.Add('\0');
+                    charList.Add(array[i]);
+                }
+            }
+            charList.Add('\0');
+            char[] charArray = charList.ToArray();
+            string SaveFilePATH = new string(charArray);
+            using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\uMod\uMod_SaveFiles.txt"))
+            {
+                sw.Write(SaveFilePATH);
+            }
+            GC.Collect();
         }
 
         //Events
@@ -148,29 +228,21 @@ namespace ACRemasteredLauncher
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            Process TexMod = new Process();
+            Process uMod = new Process();
             Process Game = new Process();
-            TexMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\OpenTexMod\";
-            TexMod.StartInfo.FileName = "OpenTexMod.exe";
+            uMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\uMod\";
+            uMod.StartInfo.FileName = "uMod.exe";
             Game.StartInfo.WorkingDirectory = InstallationDirectory;
-            string game;
-            if (DirectX10Enabled)
+            Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+            if (GraphicsModEnabled || FirstRun)
             {
-                game = "AssassinsCreed_Dx10.exe";
-            } else
-            {
-                game = "AssassinsCreed_Dx9.exe";
-            }
-            Game.StartInfo.FileName = game;
-            if (GraphicsModEnabled)
-            {
-                TexMod.Start();
+                uMod.Start();
             }
             Game.Start();
             Game.WaitForExit();
-            if (GraphicsModEnabled)
+            if (GraphicsModEnabled || FirstRun)
             {
-                TexMod.CloseMainWindow();
+                uMod.CloseMainWindow();
             }
             GC.Collect();
         }
@@ -192,10 +264,6 @@ namespace ACRemasteredLauncher
             else if (PS3Icons == true || GraphicsMod != "Original")
             {
                 GraphicsModEnabled = true;
-            }
-            if (optionsWindow.UseDirectX10.IsChecked == true)
-            {
-                DirectX10Enabled = true;
             }
             optionsWindow.Close();
             GC.Collect();

@@ -40,6 +40,7 @@ namespace ACRemasteredLauncher
         public Options()
         {
             InitializeComponent();
+            CheckGameConfig();
             LauncherConfig();
             FillComboBoxes();
             FindResolution();
@@ -48,6 +49,51 @@ namespace ACRemasteredLauncher
         }
 
         //Load Settings
+        private void CheckGameConfig()
+        {
+            if (!System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
+            {
+                FindMonitor fm = new FindMonitor();
+                fm.ShowDialog();
+                string MonitorSpecs = fm.MonitorsSpecs.Text;
+                fm.Close();
+                string[] resolution = MonitorSpecs.Split(';');
+                string[] widthHeight = resolution[0].Split('x');
+                MonitorsSpecifications.Resolution = resolution[0];
+                MonitorsSpecifications.RefreshRate.Add(int.Parse(resolution[1]));
+                MonitorsSpecifications.Width = double.Parse(widthHeight[0]);
+                MonitorsSpecifications.Height = double.Parse(widthHeight[1]);
+                string defaultConfig = Properties.Resources.Assassin;
+                List<string> defaultConfigAsList = defaultConfig.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
+                {
+                    foreach (string line in defaultConfigAsList)
+                    {
+                        if (line.StartsWith("DisplayWidth"))
+                        {
+                            
+                        }
+                        switch (line)
+                        {
+                            default:
+                                sw.Write(line + "\r\n");
+                                break;
+                            case string x when x.StartsWith("DisplayWidth"):
+                                sw.Write("DisplayWidth=" + MonitorsSpecifications.Width + "\r\n");
+                                break;
+                            case string x when x.StartsWith("DisplayHeight"):
+                                sw.Write("DisplayHeight=" + MonitorsSpecifications.Height + "\r\n");
+                                break;
+                            case string x when x.StartsWith("RefreshRate"):
+                                sw.Write("RefreshRate=" + MonitorsSpecifications.RefreshRate[0] + "\r\n");
+                                break;
+                        }
+                    }
+                }
+                GC.Collect();
+            }
+        }
+
         private void LauncherConfig()
         {
             string[] LauncherConfig = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
@@ -140,7 +186,7 @@ namespace ACRemasteredLauncher
             MonitorsSpecifications.Resolution = resolution[0];
             MonitorsSpecifications.RefreshRate.Add(int.Parse(resolution[1]));
             MonitorsSpecifications.Width = double.Parse(widthHeight[0]);
-            MonitorsSpecifications.Height = double.Parse(widthHeight[1]);;
+            MonitorsSpecifications.Height = double.Parse(widthHeight[1]);
             using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ACRemasteredLauncher.ListofSupportedResolutions.txt")))
             {
                 //640x480;59
@@ -257,11 +303,11 @@ namespace ACRemasteredLauncher
         }
         private void ReadConfigFiles()
         {
-            string[] OpenTexModConfig = File.ReadAllLines(InstallationFolder + @"\Mods\OpenTexMod\templates\ac1.txt");
+            string[] uModConfig = File.ReadAllLines(InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
             string[] ReShadeConfig = File.ReadAllLines(InstallationFolder + @"\ReShade.ini");
             string[] EaglePatchConfig = File.ReadAllLines(InstallationFolder + @"\scripts\EaglePatchAC1.ini");
             bool GraphicsMod = false;
-            foreach (string line in OpenTexModConfig)
+            foreach (string line in uModConfig)
             {
                 if (line.StartsWith("Add_true:"))
                 {
@@ -398,7 +444,7 @@ namespace ACRemasteredLauncher
         {
             SaveDisplay();
             GC.Collect();
-            SaveOpenTexTemplate();
+            SaveuModTextTemplate();
             GC.Collect();
             SaveReShade();
             GC.Collect();
@@ -469,12 +515,12 @@ namespace ACRemasteredLauncher
             File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
         }
 
-        private void SaveOpenTexTemplate()
+        private void SaveuModTextTemplate()
         {
             //"Add_true:" + InstallationDirectory + @"\Mods\AC1 Overhaul\Assassin's Creed Overhaul 2016 Full Version.tpf" + "\n"
-            using (StreamReader sr = new StreamReader(InstallationFolder + @"\Mods\OpenTexMod\templates\ac1.txt"))
+            using (StreamReader sr = new StreamReader(InstallationFolder + @"\Mods\uMod\templates\ac1.txt"))
             {
-                using (StreamWriter sw = new StreamWriter(InstallationFolder + @"\Mods\OpenTexMod\templates\ac1temp.txt"))
+                using (StreamWriter sw = new StreamWriter(InstallationFolder + @"\Mods\uMod\templates\ac1temp.txt"))
                 {
                     string line = sr.ReadLine();
                     while (line != null)
@@ -506,8 +552,8 @@ namespace ACRemasteredLauncher
                     }
                 }
             }
-            File.Delete(InstallationFolder + @"\Mods\OpenTexMod\templates\ac1.txt");
-            File.Move(InstallationFolder + @"\Mods\OpenTexMod\templates\ac1temp.txt", InstallationFolder + @"\Mods\OpenTexMod\templates\ac1.txt");
+            File.Delete(InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
+            File.Move(InstallationFolder + @"\Mods\uMod\templates\ac1temp.txt", InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
             GC.Collect();
         }
 
