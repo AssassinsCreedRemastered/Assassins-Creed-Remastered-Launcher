@@ -27,7 +27,7 @@ namespace ACRemasteredLauncher
 
         private void OpenTexModButton_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://groups.google.com/g/texmod/c/ONGcrkhsmjk");
+            Process.Start("https://code.google.com/archive/p/texmod/");
         }
 
         private void OverhaulMod_Click(object sender, RoutedEventArgs e)

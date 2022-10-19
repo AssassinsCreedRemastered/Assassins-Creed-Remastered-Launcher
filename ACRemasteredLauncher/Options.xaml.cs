@@ -37,6 +37,7 @@ namespace ACRemasteredLauncher
         Resolutions MonitorsSpecifications = new Resolutions();
         string InstallationFolder;
         string CurrentIntroQuality;
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public Options()
         {
             InitializeComponent();
@@ -51,11 +52,14 @@ namespace ACRemasteredLauncher
         //Load Settings
         private void CheckGameConfig()
         {
+            Logger.Debug("Checking Game Config");
             if (!System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
             {
                 FindMonitor fm = new FindMonitor();
                 fm.ShowDialog();
+                Logger.Debug("Finding Monitor's Resolution and Refresh Rate");
                 string MonitorSpecs = fm.MonitorsSpecs.Text;
+                Logger.Debug(MonitorSpecs);
                 fm.Close();
                 string[] resolution = MonitorSpecs.Split(';');
                 string[] widthHeight = resolution[0].Split('x');
@@ -90,12 +94,14 @@ namespace ACRemasteredLauncher
                         }
                     }
                 }
+                Logger.Debug("Checking Game Config - DONE");
                 GC.Collect();
             }
         }
 
         private void LauncherConfig()
         {
+            Logger.Debug("Checking Launcher Configuration");
             string[] LauncherConfig = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
             foreach (string config in LauncherConfig)
             {
@@ -109,22 +115,9 @@ namespace ACRemasteredLauncher
                         InstallationFolder = split[1];
                         split.Clear();
                         break;
-                    case string directx when directx.StartsWith("DirectX10"):
-                        split = config.Split('=').ToList();
-                        if (split[1] == "True")
-                        {
-                            UseDirectX10.IsChecked = true;
-                            FullScreen.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            UseDirectX10.IsChecked = false;
-                            FullScreen.Visibility = Visibility.Hidden;
-                        }
-                        split.Clear();
-                        break;
                 }
             }
+            Logger.Debug("Checking Launcher Config - DONE");
             GC.Collect();
         }
         private void FillComboBoxes()
@@ -140,6 +133,7 @@ namespace ACRemasteredLauncher
 
         private void FindInstalledReShadePresets()
         {
+            Logger.Debug("Finding every installed ReShade Preset");
             DirectoryInfo presetsDirectory = new DirectoryInfo(InstallationFolder + @"\reshade-presets\");
             DirectoryInfo[] directories = presetsDirectory.GetDirectories();
             foreach (DirectoryInfo item in directories)
@@ -171,12 +165,14 @@ namespace ACRemasteredLauncher
                         }
                         break;
                 }
+                Logger.Debug("Finding every installed ReShade Preset - DONE");
                 ReShadePresets.Add(save, temp);
                 GC.Collect();
             }
         }
         private void FindResolution()
         {
+            Logger.Debug("Finding every resolution supported by the monitor");
             FindMonitor fm = new FindMonitor();
             fm.ShowDialog();
             string MonitorSpecs = fm.MonitorsSpecs.Text;
@@ -235,7 +231,10 @@ namespace ACRemasteredLauncher
                     }
                     line = sr.ReadLine();
                 }
+                GC.Collect();
             }
+            Logger.Debug("Finding every resolution supported by the monitor - DONE");
+            Logger.Debug("Addding every resolution supported by the monitor to a ComboBox");
             foreach (Resolutions item in SupportedResolutions)
             {
                 if (item.RefreshRate[0] <= MonitorsSpecifications.RefreshRate[0])
@@ -244,10 +243,12 @@ namespace ACRemasteredLauncher
                 }
             }
             ResolutionsList.SelectedIndex = ResolutionsList.Items.Count - 1;
+            Logger.Debug("Addding every resolution supported by the monitor to a ComboBox - DONE");
             GC.Collect();
         }
         private void LoadSettings()
         {
+            Logger.Debug("Loading all settings");
             string[] lines = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
             string currentResolution = "";
             foreach (string line in lines)
@@ -300,6 +301,7 @@ namespace ACRemasteredLauncher
             GC.Collect();
             ReadConfigFiles();
             CurrentDemoQuality();
+            Logger.Debug("Loading all settings - DONE");
         }
         private void ReadConfigFiles()
         {
@@ -307,6 +309,7 @@ namespace ACRemasteredLauncher
             string[] ReShadeConfig = File.ReadAllLines(InstallationFolder + @"\ReShade.ini");
             string[] EaglePatchConfig = File.ReadAllLines(InstallationFolder + @"\scripts\EaglePatchAC1.ini");
             bool GraphicsMod = false;
+            Logger.Debug("Reading uMod Config");
             foreach (string line in uModConfig)
             {
                 if (line.StartsWith("Add_true:"))
@@ -327,11 +330,13 @@ namespace ACRemasteredLauncher
                     }
                 }
             }
+            Logger.Debug("Reading uMod Config - DONE");
             GC.Collect();
             if (!GraphicsMod)
             {
                 GraphicsModSelection.SelectedIndex = 0;
             }
+            Logger.Debug("Reading ReShade Config");
             foreach (string line in ReShadeConfig)
             {
                 if (line.StartsWith("PresetPath"))
@@ -382,7 +387,9 @@ namespace ACRemasteredLauncher
                     break;
                 }
             }
+            Logger.Debug("Reading ReShade Config - DONE");
             GC.Collect();
+            Logger.Debug("Reading EaglePatch Config");
             foreach (string line in EaglePatchConfig)
             {
                 if (line.StartsWith("PS3Controls"))
@@ -410,9 +417,11 @@ namespace ACRemasteredLauncher
                     }
                 }
             }
+            Logger.Debug("Reading EaglePatch Config - DONE");
         }
         private void CurrentDemoQuality()
         {
+            Logger.Debug("Finding current Intro Demo Quality");
             List<string> tempList = new List<string>();
             DirectoryInfo d = new DirectoryInfo(InstallationFolder + @"\Videos");
             FileInfo[] files = d.GetFiles();
@@ -436,6 +445,7 @@ namespace ACRemasteredLauncher
                 IntroQualitySelection.SelectedIndex = 2;
             }
             CurrentIntroQuality = IntroQualitySelection.SelectedItem.ToString();
+            Logger.Debug("Finding current Intro Demo Quality - DONE");
         }
 
         //Save Settings Functions
@@ -456,6 +466,7 @@ namespace ACRemasteredLauncher
 
         private void SaveDisplay()
         {
+            Logger.Debug("Saving Display Settings");
             using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
             {
                 using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini"))
@@ -498,7 +509,7 @@ namespace ACRemasteredLauncher
                                 sw.Write("VSynch=" + VSync.SelectedIndex + "\r\n");
                                 break;
                             case string x when line.StartsWith("Fullscreen"):
-                                if (FullScreen.IsChecked == true && FullScreen.Visibility == Visibility.Visible)
+                                if (FullScreen.IsChecked == true)
                                 {
                                     sw.Write("Fullscreen=1" + "\r\n");
                                 } else
@@ -513,10 +524,12 @@ namespace ACRemasteredLauncher
             }
             File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
             File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
+            Logger.Debug("Saving Display Settings - DONE");
         }
 
         private void SaveuModTextTemplate()
         {
+            Logger.Debug("Saving uMod Settings");
             //"Add_true:" + InstallationDirectory + @"\Mods\AC1 Overhaul\Assassin's Creed Overhaul 2016 Full Version.tpf" + "\n"
             using (StreamReader sr = new StreamReader(InstallationFolder + @"\Mods\uMod\templates\ac1.txt"))
             {
@@ -554,11 +567,13 @@ namespace ACRemasteredLauncher
             }
             File.Delete(InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
             File.Move(InstallationFolder + @"\Mods\uMod\templates\ac1temp.txt", InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
+            Logger.Debug("Saving uMod Settings - DONE");
             GC.Collect();
         }
 
         private void SaveReShade()
         {
+            Logger.Debug("Saving ReShade Settings");
             using (StreamReader sr = new StreamReader(InstallationFolder + @"\ReShade.ini"))
             {
                 using (StreamWriter sw = new StreamWriter(InstallationFolder + @"\ReShadeTemp.ini"))
@@ -615,11 +630,13 @@ namespace ACRemasteredLauncher
             }
             File.Delete(InstallationFolder + @"\ReShade.ini");
             File.Move(InstallationFolder + @"\ReShadeTemp.ini", InstallationFolder + @"\ReShade.ini");
+            Logger.Debug("Saving ReShade Settings - DONE");
             GC.Collect();
         }
 
         private void SaveEaglePatch()
         {
+            Logger.Debug("Saving EaglePatch Settings");
             using (StreamReader sr = new StreamReader(InstallationFolder + @"\scripts\EaglePatchAC1.ini"))
             {
                 using (StreamWriter sw = new StreamWriter(InstallationFolder + @"\scripts\EaglePatchAC1temp.ini"))
@@ -659,11 +676,13 @@ namespace ACRemasteredLauncher
             }
             File.Delete(InstallationFolder + @"\scripts\EaglePatchAC1.ini");
             File.Move(InstallationFolder + @"\scripts\EaglePatchAC1temp.ini", InstallationFolder + @"\scripts\EaglePatchAC1.ini");
+            Logger.Debug("Saving EaglePatch Settings - DONE");
             GC.Collect();
         }
 
         private void SaveQualityIntro()
         {
+            Logger.Debug("Saving Intro Quality");
             if (IntroQualitySelection.SelectedItem.ToString() != CurrentIntroQuality)
             {
                 switch (CurrentIntroQuality)
@@ -717,11 +736,13 @@ namespace ACRemasteredLauncher
                         break;
                 }
             }
+            Logger.Debug("Saving Intro Quality - DONE");
             GC.Collect();
         }
 
         private void SaveLauncherConfig()
         {
+            Logger.Debug("Saving Launcher Config");
             using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config"))
             {
                 using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\LauncherTemp.config"))
@@ -734,16 +755,6 @@ namespace ACRemasteredLauncher
                             default:
                                 sw.WriteLine(line);
                                 break;
-                            case string x when line.StartsWith("DirectX10="):
-                                if (UseDirectX10.IsChecked == true)
-                                {
-                                    sw.WriteLine("DirectX10=True");
-                                } else
-                                {
-                                    sw.WriteLine("DirectX10=False");
-                                }
-                                break;
-
                         }
                         line = sr.ReadLine();
                     }
@@ -751,6 +762,7 @@ namespace ACRemasteredLauncher
             }
             File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
             File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\LauncherTemp.config", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Launcher.config");
+            Logger.Debug("Saving Launcher Config - DONE");
         }
 
         //Events
@@ -891,17 +903,6 @@ namespace ACRemasteredLauncher
             {
                 ShowFPS.Visibility = Visibility.Visible;
                 ShowFrameTime.Visibility = Visibility.Visible;
-            }
-        }
-
-        private void UseDirectX10_Click(object sender, RoutedEventArgs e)
-        {
-            if (UseDirectX10.IsChecked == true)
-            {
-                FullScreen.Visibility = Visibility.Visible;
-            } else
-            {
-                FullScreen.Visibility = Visibility.Hidden;
             }
         }
     }

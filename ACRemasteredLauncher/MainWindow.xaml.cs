@@ -30,6 +30,7 @@ namespace ACRemasteredLauncher
         bool GraphicsModEnabled = false;
         string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
         string InstallationDirectory = Directory.GetCurrentDirectory();
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public MainWindow()
         {
             InitializeComponent();
@@ -37,10 +38,12 @@ namespace ACRemasteredLauncher
             CheckIfFoldersExist();
             if (FirstRun)
             {
+                Logger.Debug("First Setup");
                 FirstRunSetup();
             }
             else
             {
+                Logger.Debug("Reading Launcher Config");
                 using (StreamReader sr = new StreamReader(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
                 {
                     string line = sr.ReadLine();
@@ -55,6 +58,7 @@ namespace ACRemasteredLauncher
                         line = sr.ReadLine();
                     }
                 }
+                Logger.Debug("Reading Launcher Config - DONE");
             }
             GC.Collect();
         }
@@ -158,6 +162,10 @@ namespace ACRemasteredLauncher
                     }
                 }
             }
+            if (System.IO.File.Exists(InstallationDirectory + @"\ACRemasteredLauncherLogs.log"))
+            {
+                System.IO.File.Delete(InstallationDirectory + @"\ACRemasteredLauncherLogs.log");
+            }
             GC.Collect();
         }
 
@@ -184,6 +192,7 @@ namespace ACRemasteredLauncher
 
         private void FirstRunSetup()
         {
+            Logger.Debug("Running First Setup");
             using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\uMod\templates\ac1.txt"))
             {
                 sw.Write("SaveAllTextures:0\n");
@@ -214,6 +223,7 @@ namespace ACRemasteredLauncher
             {
                 sw.Write(SaveFilePATH);
             }
+            Logger.Debug("First setup completed.");
             GC.Collect();
         }
 
@@ -228,6 +238,7 @@ namespace ACRemasteredLauncher
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Open the Game");
             Process uMod = new Process();
             Process Game = new Process();
             uMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\uMod\";
@@ -236,23 +247,27 @@ namespace ACRemasteredLauncher
             Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
             if (GraphicsModEnabled || FirstRun)
             {
+                Logger.Debug("Open uMod");
                 uMod.Start();
             }
             Game.Start();
             Game.WaitForExit();
             if (GraphicsModEnabled || FirstRun)
             {
+                Logger.Debug("Close uMod");
                 uMod.CloseMainWindow();
             }
+            Logger.Debug("Closing Game");
             GC.Collect();
         }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Opening Options");
             Options optionsWindow = new Options();
+            optionsWindow.ShowDialog();
             string GraphicsMod = optionsWindow.GraphicsModSelection.SelectedItem.ToString();
             bool PS3Icons = false;
-            optionsWindow.ShowDialog();
             if (optionsWindow.PS3Icons.IsChecked == true)
             {
                 PS3Icons = true;
@@ -265,19 +280,24 @@ namespace ACRemasteredLauncher
             {
                 GraphicsModEnabled = true;
             }
+            Logger.Debug("Closing options");
             optionsWindow.Close();
             GC.Collect();
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Exiting Program");
+            NLog.LogManager.Shutdown();
             Environment.Exit(0);
         }
 
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
+            Logger.Debug("Opening Credits");
             Credits credits = new Credits();
             credits.ShowDialog();
+            Logger.Debug("Closing Credits");
             credits.Close();
             GC.Collect();
         }

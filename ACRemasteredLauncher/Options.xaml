@@ -36,7 +36,6 @@
                     </ComboBox>
                     <Label Content="Anti-aliasing" HorizontalAlignment="Left" Margin="27,300,0,0" VerticalAlignment="Top" FontSize="14" Height="30"/>
                     <CheckBox x:Name="FullScreen" Content="Fullscreen" HorizontalAlignment="Left" Margin="145,50,0,0" VerticalAlignment="Top"/>
-                    <CheckBox x:Name="UseDirectX10" Content="DirectX 10" HorizontalAlignment="Left" Margin="145,80,0,0" VerticalAlignment="Top" Click="UseDirectX10_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Extras">
