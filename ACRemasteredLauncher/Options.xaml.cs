@@ -136,39 +136,47 @@ namespace ACRemasteredLauncher
             Logger.Debug("Finding every installed ReShade Preset");
             DirectoryInfo presetsDirectory = new DirectoryInfo(InstallationFolder + @"\reshade-presets\");
             DirectoryInfo[] directories = presetsDirectory.GetDirectories();
-            foreach (DirectoryInfo item in directories)
+            if (directories.Length > 0)
             {
-                List<string> temp = new List<string>();
-                FileInfo[] fileInfo = item.GetFiles();
-                string save = "";
-                switch (item.Name)
+                foreach (DirectoryInfo item in directories)
                 {
-                    default:
-                        save = "Custom";
-                        foreach (FileInfo fileitem in fileInfo)
-                        {
-                            temp.Add(fileitem.Name.Replace(".ini",""));
-                        }
-                        break;
-                    case "CryNation":
-                        save = "CryNation";
-                        foreach (FileInfo fileitem in fileInfo)
-                        {
-                            temp.Add(fileitem.Name.Replace(".ini", ""));
-                        }
-                        break;
-                    case "Overhaul":
-                        save = "Overhaul";
-                        foreach (FileInfo fileitem in fileInfo)
-                        {
-                            temp.Add(fileitem.Name.Replace(".ini", ""));
-                        }
-                        break;
+                    List<string> temp = new List<string>();
+                    FileInfo[] fileInfo = item.GetFiles();
+                    string save = "";
+                    switch (item.Name)
+                    {
+                        default:
+                            save = "Custom";
+                            foreach (FileInfo fileitem in fileInfo)
+                            {
+                                temp.Add(fileitem.Name.Replace(".ini", ""));
+                            }
+                            break;
+                        case "CryNation":
+                            save = "CryNation";
+                            foreach (FileInfo fileitem in fileInfo)
+                            {
+                                temp.Add(fileitem.Name.Replace(".ini", ""));
+                            }
+                            break;
+                        case "Overhaul":
+                            save = "Overhaul";
+                            foreach (FileInfo fileitem in fileInfo)
+                            {
+                                temp.Add(fileitem.Name.Replace(".ini", ""));
+                            }
+                            break;
+                    }
+                    ReShadePresets.Add(save, temp);
+                    GC.Collect();
                 }
-                Logger.Debug("Finding every installed ReShade Preset - DONE");
-                ReShadePresets.Add(save, temp);
-                GC.Collect();
+            } else
+            {
+                Logger.Debug("No ReShade Presets have been found. Reinstall the modpack to fix this.");
+                MessageBox.Show("No ReShade Presets have been found. Redownload the modpack to fix this.");
+                Environment.Exit(0);
             }
+            Logger.Debug("Finding every installed ReShade Preset - DONE");
         }
         private void FindResolution()
         {
@@ -249,46 +257,50 @@ namespace ACRemasteredLauncher
         private void LoadSettings()
         {
             Logger.Debug("Loading all settings");
-            string[] lines = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
             string currentResolution = "";
-            foreach (string line in lines)
+            if (File.Exists((Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
             {
-                List<string> split = new List<string>();
-                switch (line)
+                string[] lines = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
+                foreach (string line in lines)
                 {
-                    default:
-                        break;
-                    case string displayWidth when displayWidth.StartsWith("DisplayWidth"):
-                        split = line.Split('=').ToList();
-                        currentResolution = split[1];
-                        split.Clear();
-                        break;
-                    case string displayHeight when displayHeight.StartsWith("DisplayHeight"):
-                        split = line.Split('=').ToList();
-                        currentResolution = currentResolution + "x" + split[1];
-                        split.Clear();
-                        break;
-                    case string aa when aa.StartsWith("Multisampling"):
-                        split = line.Split('=').ToList();
-                        AntialiasingList.SelectedIndex = int.Parse(split[1]);
-                        split.Clear();
-                        break;
-                    case string vSync when vSync.StartsWith("VSynch"):
-                        split = line.Split('=').ToList();
-                        VSync.SelectedIndex = int.Parse(split[1]);
-                        split.Clear();
-                        break;
-                    case string fullScreen when fullScreen.StartsWith("Fullscreen"):
-                        split = line.Split('=').ToList();
-                        if (int.Parse(split[1]) == 1)
-                        {
-                            FullScreen.IsChecked = true;
-                        } else
-                        {
-                            FullScreen.IsChecked = false;
-                        }
-                        split.Clear();
-                        break;
+                    List<string> split = new List<string>();
+                    switch (line)
+                    {
+                        default:
+                            break;
+                        case string displayWidth when displayWidth.StartsWith("DisplayWidth"):
+                            split = line.Split('=').ToList();
+                            currentResolution = split[1];
+                            split.Clear();
+                            break;
+                        case string displayHeight when displayHeight.StartsWith("DisplayHeight"):
+                            split = line.Split('=').ToList();
+                            currentResolution = currentResolution + "x" + split[1];
+                            split.Clear();
+                            break;
+                        case string aa when aa.StartsWith("Multisampling"):
+                            split = line.Split('=').ToList();
+                            AntialiasingList.SelectedIndex = int.Parse(split[1]);
+                            split.Clear();
+                            break;
+                        case string vSync when vSync.StartsWith("VSynch"):
+                            split = line.Split('=').ToList();
+                            VSync.SelectedIndex = int.Parse(split[1]);
+                            split.Clear();
+                            break;
+                        case string fullScreen when fullScreen.StartsWith("Fullscreen"):
+                            split = line.Split('=').ToList();
+                            if (int.Parse(split[1]) == 1)
+                            {
+                                FullScreen.IsChecked = true;
+                            }
+                            else
+                            {
+                                FullScreen.IsChecked = false;
+                            }
+                            split.Clear();
+                            break;
+                    }
                 }
             }
             if (ResolutionsList.Items.Contains(currentResolution))
@@ -298,126 +310,151 @@ namespace ACRemasteredLauncher
             {
                 ResolutionsList.SelectedIndex = ResolutionsList.Items.Count - 1;
             }
-            GC.Collect();
             ReadConfigFiles();
             CurrentDemoQuality();
             Logger.Debug("Loading all settings - DONE");
+            GC.Collect();
         }
         private void ReadConfigFiles()
         {
-            string[] uModConfig = File.ReadAllLines(InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
-            string[] ReShadeConfig = File.ReadAllLines(InstallationFolder + @"\ReShade.ini");
-            string[] EaglePatchConfig = File.ReadAllLines(InstallationFolder + @"\scripts\EaglePatchAC1.ini");
             bool GraphicsMod = false;
-            Logger.Debug("Reading uMod Config");
-            foreach (string line in uModConfig)
+            if (File.Exists(InstallationFolder + @"\Mods\uMod\templates\ac1.txt"))
             {
-                if (line.StartsWith("Add_true:"))
+                Logger.Debug("Reading uMod Config");
+                string[] uModConfig = File.ReadAllLines(InstallationFolder + @"\Mods\uMod\templates\ac1.txt");
+                foreach (string line in uModConfig)
                 {
-                    if (line.EndsWith("Assassin's Creed Overhaul 2016 Full Version.tpf"))
+                    if (line.StartsWith("Add_true:"))
                     {
-                        GraphicsMod = true;
-                        GraphicsModSelection.SelectedIndex = 2;
-                    }
-                    else if (line.EndsWith("AC1 CryNation.tpf"))
-                    {
-                        GraphicsMod = true;
-                        GraphicsModSelection.SelectedIndex = 1;
-                    }
-                    else if (line.EndsWith("AC1 PS Buttons.tpf"))
-                    {
-                        PS3Icons.IsChecked = true;
+                        if (line.EndsWith("Assassin's Creed Overhaul 2016 Full Version.tpf"))
+                        {
+                            GraphicsMod = true;
+                            GraphicsModSelection.SelectedIndex = 2;
+                        }
+                        else if (line.EndsWith("AC1 CryNation.tpf"))
+                        {
+                            GraphicsMod = true;
+                            GraphicsModSelection.SelectedIndex = 1;
+                        }
+                        else if (line.EndsWith("AC1 PS Buttons.tpf"))
+                        {
+                            PS3Icons.IsChecked = true;
+                        }
                     }
                 }
+            } else
+            {
+                if (!GraphicsMod)
+                {
+                    GraphicsModSelection.SelectedIndex = 0;
+                }
+                Logger.Debug("uMod Config is Empty");
+                PS3Icons.IsChecked = false;
             }
             Logger.Debug("Reading uMod Config - DONE");
-            GC.Collect();
-            if (!GraphicsMod)
+            if (File.Exists(InstallationFolder + @"\ReShade.ini"))
             {
-                GraphicsModSelection.SelectedIndex = 0;
-            }
-            Logger.Debug("Reading ReShade Config");
-            foreach (string line in ReShadeConfig)
-            {
-                if (line.StartsWith("PresetPath"))
+                Logger.Debug("Reading ReShade Config");
+                string[] ReShadeConfig = File.ReadAllLines(InstallationFolder + @"\ReShade.ini");
+                foreach (string line in ReShadeConfig)
                 {
-                    string[] tempSplit = line.Split('=');
-                    string test;
-                    if (GraphicsModSelection.SelectedItem.ToString() == "Original")
+                    if (line.StartsWith("PresetPath"))
                     {
-                        test = tempSplit[1].Replace(".\\reshade-presets\\Custom\\", "");
-                        test = test.Replace(".ini", "");
-                    } else
-                    {
-                        test = tempSplit[1].Replace(".\\reshade-presets\\" + GraphicsModSelection.SelectedItem.ToString() + @"\", "");
-                        test = test.Replace(".ini", "");
+                        string[] tempSplit = line.Split('=');
+                        string test;
+                        if (GraphicsModSelection.SelectedItem.ToString() == "Original")
+                        {
+                            test = tempSplit[1].Replace(".\\reshade-presets\\Custom\\", "");
+                            test = test.Replace(".ini", "");
+                        }
+                        else
+                        {
+                            test = tempSplit[1].Replace(".\\reshade-presets\\" + GraphicsModSelection.SelectedItem.ToString() + @"\", "");
+                            test = test.Replace(".ini", "");
 
+                        }
+                        if (test.Length < 1)
+                        {
+                            ReShadePreset.SelectedIndex = -1;
+                        }
+                        else
+                        {
+                            ReShadePreset.SelectedItem = test;
+                        }
                     }
-                    if (test.Length < 1)
+                    if (line.StartsWith("ShowFPS"))
                     {
-                        ReShadePreset.SelectedIndex = -1;
-                    } else
+                        string[] tempSplit = line.Split('=');
+                        if (int.Parse(tempSplit[1]) == 1)
+                        {
+                            ShowFPS.IsChecked = true;
+                        }
+                        else
+                        {
+                            ShowFPS.IsChecked = false;
+                        }
+                    }
+                    if (line.StartsWith("ShowFrameTime"))
                     {
-                        ReShadePreset.SelectedItem = test;
+                        string[] tempSplit = line.Split('=');
+                        if (int.Parse(tempSplit[1]) == 1)
+                        {
+                            ShowFrameTime.IsChecked = true;
+                        }
+                        else
+                        {
+                            ShowFrameTime.IsChecked = false;
+                        }
+                        break;
                     }
                 }
-                if (line.StartsWith("ShowFPS"))
-                {
-                    string[] tempSplit = line.Split('=');
-                    if (int.Parse(tempSplit[1]) == 1)
-                    {
-                        ShowFPS.IsChecked = true;
-                    }
-                    else
-                    {
-                        ShowFPS.IsChecked = false;
-                    }
-                }
-                if (line.StartsWith("ShowFrameTime"))
-                {
-                    string[] tempSplit = line.Split('=');
-                    if (int.Parse(tempSplit[1]) == 1)
-                    {
-                        ShowFrameTime.IsChecked = true;
-                    }
-                    else
-                    {
-                        ShowFrameTime.IsChecked = false;
-                    }
-                    break;
-                }
+            } else
+            {
+                ReShadePreset.SelectedIndex = -1;
+                ShowFPS.IsChecked = false;
+                ShowFrameTime.IsChecked = false;
+                Logger.Debug("ReShade Config is Empty");
             }
             Logger.Debug("Reading ReShade Config - DONE");
-            GC.Collect();
-            Logger.Debug("Reading EaglePatch Config");
-            foreach (string line in EaglePatchConfig)
+            if (File.Exists(InstallationFolder + @"\scripts\EaglePatchAC1.ini"))
             {
-                if (line.StartsWith("PS3Controls"))
+                Logger.Debug("Reading EaglePatch Config");
+                string[] EaglePatchConfig = File.ReadAllLines(InstallationFolder + @"\scripts\EaglePatchAC1.ini");
+                foreach (string line in EaglePatchConfig)
                 {
-                    string[] tempSplit = line.Split('=');
-                    if (int.Parse(tempSplit[1]) == 1)
+                    if (line.StartsWith("PS3Controls"))
                     {
-                        SwapTriggersAndBumpers.IsChecked = true;
+                        string[] tempSplit = line.Split('=');
+                        if (int.Parse(tempSplit[1]) == 1)
+                        {
+                            SwapTriggersAndBumpers.IsChecked = true;
+                        }
+                        else
+                        {
+                            SwapTriggersAndBumpers.IsChecked = false;
+                        }
                     }
-                    else
+                    else if (line.StartsWith("SkipIntroVideos"))
                     {
-                        SwapTriggersAndBumpers.IsChecked = false;
+                        string[] tempSplit = line.Split('=');
+                        if (int.Parse(tempSplit[1]) == 1)
+                        {
+                            SkipIntro.IsChecked = true;
+                        }
+                        else
+                        {
+                            SkipIntro.IsChecked = false;
+                        }
                     }
                 }
-                else if (line.StartsWith("SkipIntroVideos"))
-                {
-                    string[] tempSplit = line.Split('=');
-                    if (int.Parse(tempSplit[1]) == 1)
-                    {
-                        SkipIntro.IsChecked = true;
-                    }
-                    else
-                    {
-                        SkipIntro.IsChecked = false;
-                    }
-                }
+            } else
+            {
+                Logger.Debug("EaglePatch Config is Empty");
+                SwapTriggersAndBumpers.IsChecked = false;
+                SkipIntro.IsChecked = false;
             }
             Logger.Debug("Reading EaglePatch Config - DONE");
+            GC.Collect();
         }
         private void CurrentDemoQuality()
         {
