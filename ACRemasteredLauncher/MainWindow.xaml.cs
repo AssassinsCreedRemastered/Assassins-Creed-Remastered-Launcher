@@ -32,7 +32,6 @@ namespace ACRemasteredLauncher
             InitializeComponent();
             GC.Collect();
         }
-
         //Events
         private void Window_Drag(object sender, MouseButtonEventArgs e)
         {
@@ -41,7 +40,7 @@ namespace ACRemasteredLauncher
 
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-
+            PageViewer.Source = new Uri("Pages/Default Page.xaml", UriKind.Relative);
         }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
@@ -51,12 +50,12 @@ namespace ACRemasteredLauncher
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-
+            Environment.Exit(0);
         }
 
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
-
+            PageViewer.Source = new Uri("Pages/Credits Page.xaml", UriKind.Relative);
         }
     }
 }
