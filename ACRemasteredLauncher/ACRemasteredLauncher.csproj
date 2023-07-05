@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5C75E6D6-2A06-4B43-A533-E819F8EBE1EB}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>ACRemasteredLauncher</RootNamespace>
     <AssemblyName>AssassinsCreedRemasteredLauncher</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
@@ -74,18 +74,14 @@
     <Compile Include="Pages\Credits Page.xaml.cs">
       <DependentUpon>Credits Page.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Credits.xaml.cs">
-      <DependentUpon>Credits.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Pages\Default Page.xaml.cs">
       <DependentUpon>Default Page.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Options Page.xaml.cs">
+      <DependentUpon>Options Page.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Resolutions.cs" />
     <Page Include="Pages\Credits Page.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Credits.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -106,6 +102,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Options.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\Options Page.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -177,7 +177,19 @@
     <Resource Include="Assets\background3.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Dark\Play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\Dark\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\Dark\Settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\Dark\Credits.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Icons\Dark\Back.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
