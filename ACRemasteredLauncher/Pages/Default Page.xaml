@@ -9,7 +9,7 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="DefaultPage">
     <Grid>
-        <Rectangle RadiusX="20" RadiusY="20">
+        <Rectangle RadiusX="10" RadiusY="10">
             <Rectangle.Fill>
                 <ImageBrush x:Name="Background" ImageSource="../Assets/background3.jpg" />
             </Rectangle.Fill>
