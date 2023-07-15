@@ -28,10 +28,29 @@ namespace ACRemasteredLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
+        public string path = "";
         public MainWindow()
         {
             InitializeComponent();
+            GetDirectory();
             GC.Collect();
+        }
+
+        private async void GetDirectory()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                {
+                    path = sr.ReadLine();
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
         }
 
         //Events
@@ -41,9 +60,9 @@ namespace ACRemasteredLauncher
             {
                 Process uMod = new Process();
                 Process Game = new Process();
-                uMod.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory() + @"\uMod\";
+                uMod.StartInfo.WorkingDirectory = path + @"\uMod";
                 uMod.StartInfo.FileName = "uMod.exe";
-                Game.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+                Game.StartInfo.WorkingDirectory = path;
                 Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
                 uMod.Start();
                 Game.Start();
