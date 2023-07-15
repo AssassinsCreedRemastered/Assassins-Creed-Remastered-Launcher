@@ -7,7 +7,7 @@
         xmlns:Media="clr-namespace:System.Windows.Media;assembly=PresentationCore"
         xmlns:Animations="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
         mc:Ignorable="d"
-        Title="Assassin's Creed Remastered Launcher" Height="580" Width="960" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Center" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Icon="/icon.ico" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent">
+        Title="Assassin's Creed Remastered Launcher" Height="580" Width="760" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Center" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Icon="/icon.ico" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style x:Key="RoundedFrame" TargetType="Frame">
             <Setter Property="Template">
@@ -43,24 +43,24 @@
         <Button x:Name="Exit" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Click="Exit_Click">
             <Button.Content>
                 <StackPanel>
-                    <Image Source="Assets/Icons/Dark/Exit.png" Stretch="UniformToFill"></Image>
-                </StackPanel>
+                        <Image Source="Assets/Icons/Dark/Exit.png" Stretch="UniformToFill"/>
+                    </StackPanel>
             </Button.Content>
         </Button>
         <Button x:Name="Back" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Click="Back_Click">
             <Button.Content>
                 <StackPanel>
-                    <Image Source="Assets/Icons/Dark/Back.png" Stretch="UniformToFill"></Image>
-                </StackPanel>
+                        <Image Source="Assets/Icons/Dark/Back.png" Stretch="UniformToFill"/>
+                    </StackPanel>
             </Button.Content>
         </Button>
             <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Button x:Name="PlayButton" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Click="PlayButton_Click" >
                 <Button.Content>
                     <StackPanel>
-                        <Image Source="Assets/Icons/Dark/Play.png" Stretch="UniformToFill"></Image>
-                        <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center"></TextBlock>
-                    </StackPanel>
+                            <Image Source="Assets/Icons/Dark/Play.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
                 </Button.Content>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
@@ -76,17 +76,17 @@
             <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" Margin="10,10,10,10" Click="Credits_Click">
                 <Button.Content>
                     <StackPanel>
-                        <Image Source="Assets/Icons/Dark/Credits.png" Stretch="UniformToFill"></Image>
-                        <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center"></TextBlock>
-                    </StackPanel>
+                            <Image Source="Assets/Icons/Dark/Credits.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
                 </Button.Content>
             </Button>
             <Button x:Name="OptionsButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="10,10,10,10" Click="OptionsButton_Click">
                 <Button.Content>
                     <StackPanel>
-                        <Image Source="Assets/Icons/Dark/Settings.png" Stretch="UniformToFill"></Image>
-                        <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center"></TextBlock>
-                    </StackPanel>
+                            <Image Source="Assets/Icons/Dark/Settings.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
                 </Button.Content>
             </Button>
         </StackPanel>
@@ -94,11 +94,7 @@
         <Border Grid.Column="0" Grid.Row ="0" BorderBrush="DarkGoldenrod" BorderThickness="5"></Border>
         <Border Grid.Column="0" Grid.Row ="1" BorderBrush="Blue" BorderThickness="5"></Border>
         <Border Grid.Column="1" Grid.RowSpan="1" BorderBrush="Red" BorderThickness="5"></Border>-->
-            <Rectangle RadiusX="20" RadiusY="20">
-            </Rectangle>
-            <Frame x:Name="PageViewer" Grid.Column="1" Grid.Row="2" Source="Pages/Default Page.xaml" NavigationUIVisibility="Hidden" Navigating="PageViewer_Navigating" Background="#F1F1F1F1" Style="{StaticResource RoundedFrame}">
-
-            </Frame>
+            <Frame x:Name="PageViewer" Source="Pages/Default Page.xaml" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden" Navigating="PageViewer_Navigating" Background="#F1F1F1F1" Style="{StaticResource RoundedFrame}" />
         </Grid>
     </Border>
 </Window>

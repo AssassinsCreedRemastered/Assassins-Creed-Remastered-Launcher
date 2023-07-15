@@ -17,6 +17,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ACRemasteredLauncher.Pages;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
 
@@ -36,12 +37,29 @@ namespace ACRemasteredLauncher
         //Events
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Source = new Uri("Pages/Default Page.xaml", UriKind.Relative);
+            try
+            {
+                Process uMod = new Process();
+                Process Game = new Process();
+                uMod.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory() + @"\uMod\";
+                uMod.StartInfo.FileName = "uMod.exe";
+                Game.StartInfo.WorkingDirectory = Directory.GetCurrentDirectory();
+                Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                uMod.Start();
+                Game.Start();
+                Game.WaitForExit();
+                uMod.CloseMainWindow();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            };
         }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Source = new Uri("Pages/Options Page.xaml", UriKind.Relative);
+            PageViewer.Navigate(new Uri("Pages/Options Page.xaml", UriKind.Relative));
         }
 
         // Exit the program
@@ -53,7 +71,7 @@ namespace ACRemasteredLauncher
         // Open the Credits Page
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Source = new Uri("Pages/Credits Page.xaml", UriKind.Relative);
+            PageViewer.Navigate(new Uri("Pages/Credits Page.xaml", UriKind.Relative));
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
@@ -75,25 +93,18 @@ namespace ACRemasteredLauncher
 
         private void PageViewer_Navigating(object sender, NavigatingCancelEventArgs e)
         {
-            Default_Page dp = new Default_Page();
+            /*
             switch (e.Uri.ToString())
             {
                 case string s when s.EndsWith("Default%20Page.xaml"):
-                    Console.WriteLine("Default Page");
                     break;
                 case string s when s.EndsWith("Credits%20Page.xaml"):
-                    Console.WriteLine("Credits Page");
-                    //dp.PageImageSource = new BitmapImage(new Uri("../Assets/background.png"));
-                    Console.WriteLine(dp.PageImageSource);
-                    dp.Test2();
                     break;
                 case string s when s.EndsWith("Options%20Page.xaml"):
-                    Console.WriteLine("Options Page");
-                    dp.Test2();
                     break;
                 default:
                     break;
-            }
+            }*/
         }
     }
 }

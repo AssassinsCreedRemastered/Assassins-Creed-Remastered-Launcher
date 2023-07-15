@@ -36,16 +36,6 @@ namespace ACRemasteredLauncher
             Process.Start("https://www.moddb.com/mods/assassins-creed-2014-overhaul");
         }
 
-        private void CryNation_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start("https://www.patreon.com/ktmx");
-        }
-
-        private void RTGI_Click(object sender, RoutedEventArgs e)
-        {
-            Process.Start("https://www.patreon.com/mcflypg");
-        }
-
         private void ReShade_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://reshade.me/");
@@ -61,9 +51,9 @@ namespace ACRemasteredLauncher
             Process.Start("https://www.nexusmods.com/assassinscreed/mods/10");
         }
 
-        private void _4KIntro_Click(object sender, RoutedEventArgs e)
+        private void ReShadePreset_Click(object sender, RoutedEventArgs e)
         {
-            Process.Start("https://www.nexusmods.com/assassinscreed/mods/22");
+            Process.Start("https://steamcommunity.com/sharedfiles/filedetails/?id=2957930769");
         }
     }
 }

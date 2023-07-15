@@ -20,26 +20,9 @@ namespace ACRemasteredLauncher
     /// </summary>
     public partial class Default_Page : Page
     {
-        public string Test { get; set; }
-        public ImageSource PageImageSource
-        {
-            get { return Background.ImageSource; }
-            set { Background.ImageSource = value; }
-        }
         public Default_Page()
         {
             InitializeComponent();
-            Test = "test";
-        }
-
-        public void Test2()
-        {
-            Ispis();
-        }
-
-        private void Ispis()
-        {
-            Console.WriteLine("test21");
         }
     }
 }
