@@ -13,9 +13,11 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ACRemasteredLauncher.Pages;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
 
@@ -26,280 +28,102 @@ namespace ACRemasteredLauncher
     /// </summary>
     public partial class MainWindow : Window
     {
-        bool FirstRun = false;
-        bool GraphicsModEnabled = false;
-        string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string InstallationDirectory = Directory.GetCurrentDirectory();
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        public string path = "";
         public MainWindow()
         {
             InitializeComponent();
-            CreateShortcut();
-            CheckIfFoldersExist();
-            if (FirstRun)
-            {
-                Logger.Debug("First Setup");
-                FirstRunSetup();
-            }
-            else
-            {
-                Logger.Debug("Reading Launcher Config");
-                using (StreamReader sr = new StreamReader(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
-                {
-                    string line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        string[] split = line.Split('=');
-                        if (split[0].StartsWith("InstallationDirectory"))
-                        {
-                            InstallationDirectory = split[1];
-                            break;
-                        }
-                        line = sr.ReadLine();
-                    }
-                }
-                Logger.Debug("Reading Launcher Config - DONE");
-            }
+            GetDirectory();
             GC.Collect();
         }
 
-        private void CheckIfFoldersExist()
+        private async void GetDirectory()
         {
-            if (!System.IO.Directory.Exists(AppData + @"\Ubisoft\Assassin's Creed"))
+            try
             {
-                FirstRun = true;
-                System.IO.Directory.CreateDirectory(AppData + @"\Ubisoft\Assassin's Creed");
-                if (!System.IO.File.Exists(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
+                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
-                    using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
-                    {
-                        sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
-                    }
+                    path = sr.ReadLine();
                 }
+                await Task.Delay(10);
             }
-            else
+            catch (Exception ex)
             {
-                if (!System.IO.File.Exists(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
-                {
-                    FirstRun = true;
-                    using (StreamWriter sw = new StreamWriter(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
-                    {
-                        sw.WriteLine("InstallationDirectory=" + InstallationDirectory);
-                    }
-                } else
-                {
-                    using (StreamReader sr = new StreamReader(AppData + @"\Ubisoft\Assassin's Creed\Launcher.config"))
-                    {
-                        string line = sr.ReadLine();
-                        while (line != null)
-                        {
-                            string[] split = line.Split('=');
-                            if (split[0].StartsWith("InstallationDirectory"))
-                            {
-                                InstallationDirectory = split[1];
-                                break;
-                            }
-                            line = sr.ReadLine();
-                        }
-                    }
-                }
+                MessageBox.Show(ex.Message);
+                return;
             }
-            if (!System.IO.Directory.Exists(AppData + @"\uMod\"))
-            {
-                FirstRun = true;
-                System.IO.Directory.CreateDirectory(AppData + @"\uMod");
-                if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
-                {
-                    string ExecutableDirectory = InstallationDirectory + @"\AssassinsCreed_Dx9.exe";
-                    char[] array = ExecutableDirectory.ToCharArray();
-                    List<char> charList = new List<char>();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (i == 0)
-                        {
-                            charList.Add(array[i]);
-                        }
-                        else
-                        {
-                            charList.Add('\0');
-                            charList.Add(array[i]);
-                        }
-                    }
-                    charList.Add('\0');
-                    char[] charArray = charList.ToArray();
-                    string ExecutablePath = new string(charArray);
-                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod\uMod_DX9.txt"))
-                    {
-                        sw.Write(ExecutablePath);
-                    }
-                }
-            } else
-            {
-                if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
-                {
-                    FirstRun = true;
-                    string ExecutableDirectory = InstallationDirectory + @"\AssassinsCreed_Dx9.exe";
-                    char[] array = ExecutableDirectory.ToCharArray();
-                    List<char> charList = new List<char>();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (i == 0)
-                        {
-                            charList.Add(array[i]);
-                        }
-                        else
-                        {
-                            charList.Add('\0');
-                            charList.Add(array[i]);
-                        }
-                    }
-                    char[] charArray = charList.ToArray();
-                    string ExecutablePath = new string(charArray);
-                    //ExecutablePath = ExecutablePath.Replace("਍", "");
-                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\uMod\uMod_DX9.txt"))
-                    {
-                        sw.Write(ExecutablePath);
-                    }
-                }
-            }
-            if (System.IO.File.Exists(InstallationDirectory + @"\ACRemasteredLauncherLogs.log"))
-            {
-                System.IO.File.Delete(InstallationDirectory + @"\ACRemasteredLauncherLogs.log");
-            }
-            GC.Collect();
-        }
-
-        private void CreateShortcut()
-        {
-            if (!System.IO.File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk"))
-            {
-                MessageBoxResult result = MessageBox.Show("Do you want to create shortcut?", "Confirmation", MessageBoxButton.YesNo);
-                if (result == MessageBoxResult.Yes)
-                {
-                    WshShell shell = new WshShell();
-                    string SearchLocation = Environment.GetFolderPath(Environment.SpecialFolder.StartMenu);
-                    string ShortcutLocation = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\Assassin's Creed Remastered.lnk";
-                    IWshShortcut Shortcut = shell.CreateShortcut(ShortcutLocation);
-                    Shortcut.Description = "Shortcut for Assassin's Creed Remastered";
-                    Shortcut.IconLocation = InstallationDirectory + @"\icon.ico";
-                    Shortcut.TargetPath = InstallationDirectory + @"\AssassinsCreedRemasteredLauncher.exe";
-                    Shortcut.Save();
-                    System.IO.File.Copy(ShortcutLocation, SearchLocation + @"\Assassin's Creed Remastered.lnk");
-                }
-            }
-            GC.Collect();
-        }
-
-        private void FirstRunSetup()
-        {
-            Logger.Debug("Running First Setup");
-            using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\uMod\templates\ac1.txt"))
-            {
-                sw.Write("SaveAllTextures:0\n");
-                sw.Write("SaveSingleTexture:0\n");
-                sw.Write("FontColour:255,0,0\n");
-                sw.Write("TextureColour:0,255,0\n");
-                sw.Write("Add_true:" + InstallationDirectory + @"\Mods\AC1 Overhaul\Assassin's Creed Overhaul 2016 Full Version.tpf" + "\n");
-            }
-            string SaveFile = InstallationDirectory + @"\AssassinsCreed_Dx9.exe" + "|" + InstallationDirectory + @"\Mods\uMod\templates\ac1.txt";
-            char[] array = SaveFile.ToCharArray();
-            List<char> charList = new List<char>();
-            for (int i = 0; i < array.Length; i++)
-            {
-                if (i == 0)
-                {
-                    charList.Add(array[i]);
-                }
-                else
-                {
-                    charList.Add('\0');
-                    charList.Add(array[i]);
-                }
-            }
-            charList.Add('\0');
-            char[] charArray = charList.ToArray();
-            string SaveFilePATH = new string(charArray);
-            using (StreamWriter sw = new StreamWriter(InstallationDirectory + @"\Mods\uMod\uMod_SaveFiles.txt"))
-            {
-                sw.Write(SaveFilePATH);
-            }
-            Logger.Debug("First setup completed.");
-            GC.Collect();
         }
 
         //Events
-        private void Window_Drag(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                this.DragMove();
-            }
-        }
-
         private void PlayButton_Click(object sender, RoutedEventArgs e)
         {
-            Logger.Debug("Open the Game");
-            Process uMod = new Process();
-            Process Game = new Process();
-            uMod.StartInfo.WorkingDirectory = InstallationDirectory + @"\Mods\uMod\";
-            uMod.StartInfo.FileName = "uMod.exe";
-            Game.StartInfo.WorkingDirectory = InstallationDirectory;
-            Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
-            if (GraphicsModEnabled || FirstRun)
+            try
             {
-                Logger.Debug("Open uMod");
+                Process uMod = new Process();
+                Process Game = new Process();
+                uMod.StartInfo.WorkingDirectory = path + @"\uMod";
+                uMod.StartInfo.FileName = "uMod.exe";
+                Game.StartInfo.WorkingDirectory = path;
+                Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
                 uMod.Start();
-            }
-            Game.Start();
-            Game.WaitForExit();
-            if (GraphicsModEnabled || FirstRun)
-            {
-                Logger.Debug("Close uMod");
+                Game.Start();
+                Game.WaitForExit();
                 uMod.CloseMainWindow();
             }
-            Logger.Debug("Closing Game");
-            GC.Collect();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            };
         }
 
         private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            Logger.Debug("Opening Options");
-            Options optionsWindow = new Options();
-            optionsWindow.ShowDialog();
-            string GraphicsMod = optionsWindow.GraphicsModSelection.SelectedItem.ToString();
-            bool PS3Icons = false;
-            if (optionsWindow.PS3Icons.IsChecked == true)
-            {
-                PS3Icons = true;
-            }
-            if (GraphicsMod == "Original" && PS3Icons == false)
-            {
-                GraphicsModEnabled = false;
-            }
-            else if (PS3Icons == true || GraphicsMod != "Original")
-            {
-                GraphicsModEnabled = true;
-            }
-            Logger.Debug("Closing options");
-            optionsWindow.Close();
-            GC.Collect();
+            PageViewer.Navigate(new Uri("Pages/Options Page.xaml", UriKind.Relative));
         }
 
+        // Exit the program
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            Logger.Debug("Exiting Program");
-            NLog.LogManager.Shutdown();
             Environment.Exit(0);
         }
 
+        // Open the Credits Page
         private void Credits_Click(object sender, RoutedEventArgs e)
         {
-            Logger.Debug("Opening Credits");
-            Credits credits = new Credits();
-            credits.ShowDialog();
-            Logger.Debug("Closing Credits");
-            credits.Close();
-            GC.Collect();
+            PageViewer.Navigate(new Uri("Pages/Credits Page.xaml", UriKind.Relative));
+        }
+
+        private void Back_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService navigationService = PageViewer.NavigationService;
+            if (navigationService.CanGoBack)
+            {
+                navigationService.GoBack();
+            }
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
+        }
+
+        private void PageViewer_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            /*
+            switch (e.Uri.ToString())
+            {
+                case string s when s.EndsWith("Default%20Page.xaml"):
+                    break;
+                case string s when s.EndsWith("Credits%20Page.xaml"):
+                    break;
+                case string s when s.EndsWith("Options%20Page.xaml"):
+                    break;
+                default:
+                    break;
+            }*/
         }
     }
 }

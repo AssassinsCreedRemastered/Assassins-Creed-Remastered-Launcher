@@ -1,0 +1,396 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+
+namespace ACRemasteredLauncher.Pages
+{
+    /// <summary>
+    /// Interaction logic for Options_Page.xaml
+    /// </summary>
+    public partial class Options_Page : Page
+    {
+        public Options_Page()
+        {
+            InitializeComponent();
+        }
+
+        // Global
+        List<Resolutions> compatibleResolutions = new List<Resolutions>();
+        private string path = "";
+
+        // Functions
+        // Used to find all of the supported resolutions
+        private async Task FindSupportedResolutions()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ACRemasteredLauncher.ListofSupportedResolutions.txt")))
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        string[] splitLine = line.Split('x');
+                        if (double.Parse(splitLine[0]) < System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) < System.Windows.SystemParameters.PrimaryScreenHeight)
+                        {
+                            Resolutions newRes = new Resolutions();
+                            newRes.Resolution = line;
+                            newRes.Width = double.Parse(splitLine[0]);
+                            newRes.Height = double.Parse(splitLine[1]);
+                            compatibleResolutions.Add(newRes);
+                            ResolutionsList.Items.Add(newRes.Resolution);
+                        }
+                        else if (double.Parse(splitLine[0]) == System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) == System.Windows.SystemParameters.PrimaryScreenHeight)
+                        {
+                            Resolutions newRes = new Resolutions();
+                            newRes.Resolution = line;
+                            newRes.Width = double.Parse(splitLine[0]);
+                            newRes.Height = double.Parse(splitLine[1]);
+                            compatibleResolutions.Add(newRes);
+                            ResolutionsList.Items.Add(newRes.Resolution);
+                            ResolutionsList.SelectedIndex = ResolutionsList.Items.IndexOf(newRes.Resolution);
+                            break;
+                        };
+                        line = sr.ReadLine();
+                    };
+                };
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Get Path where AC installation is
+        private async void GetDirectory()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                {
+                    path = sr.ReadLine() + @"\";
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Used to read all of the configuration files and setup the elements in the Options Page
+        private async Task ReadConfigFiles()
+        {
+            try
+            {
+                await ReadGameConfig();
+                await ReaduModConfig();
+                await CheckReShade();
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Reads Assassin.ini for Game Settings
+        private async Task ReadGameConfig()
+        {
+            try
+            {
+                string GameConfigPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini";
+                if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
+                {
+                    string currentResolution = "";
+                    string[] lines = File.ReadAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
+                    foreach (string line in lines)
+                    {
+                        List<string> split = new List<string>();
+                        switch (line)
+                        {
+                            default:
+                                break;
+                            case string x when line.StartsWith("DisplayWidth"):
+                                split = line.Split('=').ToList();
+                                currentResolution = split[1];
+                                split.Clear();
+                                break;
+                            case string x when line.StartsWith("DisplayHeight"):
+                                split = line.Split('=').ToList();
+                                currentResolution = currentResolution + "x" + split[1];
+                                split.Clear();
+                                break;
+                            case string x when line.StartsWith("VSynch"):
+                                split = line.Split('=').ToList();
+                                if (int.Parse(split[1]) == 1)
+                                {
+                                    VSync.IsChecked = true;
+                                } else
+                                {
+                                    VSync.IsChecked = false;
+                                }
+                                split.Clear();
+                                break;
+                            case string x when line.StartsWith("Multisampling"):
+                                split = line.Split('=').ToList();
+                                if (int.Parse(split[1]) >= 0 && int.Parse(split[1]) <= 2)
+                                {
+                                    AntiAliasing.SelectedIndex = int.Parse(split[1]);
+                                }
+                                split.Clear();
+                                break;
+                        }
+                    }
+                    if (ResolutionsList.Items.Contains(currentResolution))
+                    {
+                        ResolutionsList.SelectedIndex = ResolutionsList.Items.IndexOf(currentResolution);
+                    } else
+                    {
+                        ResolutionsList.SelectedIndex = ResolutionsList.Items.Count - 1;
+                    }
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Reads uMod configuration
+        private async Task ReaduModConfig()
+        {
+            try
+            {
+                if (File.Exists(path + @"uMod\templates\ac1.txt"))
+                {
+                    string[] uModConfig = File.ReadAllLines(path + @"uMod\templates\ac1.txt");
+                    foreach (string line in uModConfig)
+                    {
+                        if (line.StartsWith("Add_true:"))
+                        {
+                            if (line.EndsWith("Overhaul Fixed For ReShade.tpf"))
+                            {
+                                OverhaulMod.IsChecked = true;
+                            } 
+                            else if (line.EndsWith("AC1 PS Buttons.tpf"))
+                            {
+                                PS3Buttons.IsChecked = true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+            await Task.Delay(10);
+        }
+
+        // Check if ReShade is enabled
+        private async Task CheckReShade()
+        {
+            try
+            {
+                if (File.Exists(path + @"d3d9.dll") && File.Exists(path + @"dxgi.dll"))
+                {
+                    ReShade.IsChecked = true;
+                } else
+                {
+                    ReShade.IsChecked = false;
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Saving Game settings (Resolution, VSync, AntiAliasing)
+        private async Task SaveGameSettings()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini"))
+                {
+                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini"))
+                    {
+                        string line = sr.ReadLine();
+                        while (line != null)
+                        {
+                            switch (line)
+                            {
+                                default:
+                                    sw.Write(line + "\r\n");
+                                    break;
+                                case string x when line.StartsWith("DisplayWidth"):
+                                    foreach (Resolutions resolution in compatibleResolutions)
+                                    {
+                                        if (resolution.Resolution == ResolutionsList.SelectedItem.ToString())
+                                        {
+                                            sw.Write("DisplayWidth=" + resolution.Width + "\r\n");
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case string x when line.StartsWith("DisplayHeight"):
+                                    foreach (Resolutions resolution in compatibleResolutions)
+                                    {
+                                        if (resolution.Resolution == ResolutionsList.SelectedItem.ToString())
+                                        {
+                                            sw.Write("DisplayHeight=" + resolution.Height + "\r\n");
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                case string x when line.StartsWith("Multisampling"):
+                                    sw.Write("Multisampling=" + AntiAliasing.SelectedIndex + "\r\n");
+                                    break;
+                                case string x when line.StartsWith("VSynch"):
+                                    if (VSync.IsChecked == true)
+                                    {
+                                        sw.Write("VSynch=1" + "\r\n");
+                                    } else
+                                    {
+                                        sw.Write("VSynch=0" + "\r\n");
+                                    }
+                                    break;
+                            }
+                            line = sr.ReadLine();
+                        }
+                    }
+                }
+                File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
+                File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Saving uMod settings (Overhaul mod, PSButtons etc..)
+        private async Task SaveuModSettings()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(path + @"uMod\templates\ac1.txt"))
+                {
+                    using (StreamWriter sw = new StreamWriter(path + @"uMod\templates\ac1temp.txt"))
+                    {
+                        string line = sr.ReadLine();
+                        while (line != null) 
+                        {
+                            if (line.StartsWith("Add_true:"))
+                            {
+                                break;
+                            } else
+                            {
+                                sw.WriteLine(line);
+                            }
+                            line = sr.ReadLine();
+                        }
+                        if (OverhaulMod.IsChecked == true)
+                        {
+                            sw.Write("Add_true:" + path + @"Mods\Overhaul\Overhaul Fixed For ReShade.tpf" + "\n");
+                        }
+                        if (PS3Buttons.IsChecked == true)
+                        {
+                            sw.Write("Add_true:" + path + @"Mods\PS3Buttons\AC1 PS Buttons.tpf" + "\n");
+                        }
+                    }
+                }
+                File.Delete(path + @"uMod\templates\ac1.txt");
+                File.Move(path + @"uMod\templates\ac1temp.txt", path + @"uMod\templates\ac1.txt");
+                GC.Collect();
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Saving ReShade choice
+        private async Task SaveReShade()
+        {
+            try
+            {
+                if (ReShade.IsChecked == true)
+                {
+                    if (File.Exists(path + @"d3d9.dll.disabled") && File.Exists(path + @"dxgi.dll.disabled"))
+                    {
+                        File.Move(path + @"d3d9.dll.disabled", path + @"d3d9.dll");
+                        File.Move(path + @"dxgi.dll.disabled", path + @"dxgi.dll");
+                    }
+                }
+                else
+                {
+                    if (File.Exists(path + @"d3d9.dll") && File.Exists(path + @"dxgi.dll"))
+                    {
+                        File.Move(path + @"d3d9.dll", path + @"d3d9.dll.disabled");
+                        File.Move(path + @"dxgi.dll", path + @"dxgi.dll.disabled");
+                    }
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Events
+        // After the Page has loaded
+        private async void Options_Loaded(object sender, RoutedEventArgs e)
+        {
+            GetDirectory();
+            await FindSupportedResolutions();
+            await ReadConfigFiles();
+        }
+
+        // Save settings when button Save is clicked
+        private async void Save_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await SaveGameSettings();
+                await SaveuModSettings();
+                await SaveReShade();
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+    }
+}

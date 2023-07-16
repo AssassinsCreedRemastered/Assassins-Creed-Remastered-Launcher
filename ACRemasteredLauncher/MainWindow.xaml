@@ -4,24 +4,97 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ACRemasteredLauncher"
+        xmlns:Media="clr-namespace:System.Windows.Media;assembly=PresentationCore"
+        xmlns:Animations="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
         mc:Ignorable="d"
-        Title="Assassin's Creed Remastered Launcher" Height="580" Width="960" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Center" ResizeMode="NoResize" Background="{DynamicResource backgroundimage}" WindowStyle="None" Icon="/icon.ico" MouseDown="Window_Drag">
+        Title="Assassin's Creed Remastered Launcher" Height="580" Width="760" HorizontalContentAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" VerticalContentAlignment="Center" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Icon="/icon.ico" MouseLeftButtonDown="Window_MouseLeftButtonDown" Background="Transparent" WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <ImageBrush x:Key="backgroundimage" ImageSource="/background.png">
-            <ImageBrush.RelativeTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="1.15" ScaleY="1.4"/>
-                    <SkewTransform AngleX="0"/>
-                    <RotateTransform/>
-                    <TranslateTransform X="0"/>
-                </TransformGroup>
-            </ImageBrush.RelativeTransform>
-        </ImageBrush>
+        <Style x:Key="RoundedFrame" TargetType="Frame">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Frame">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10"
+                            Margin="{TemplateBinding Margin}">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
-    <Grid Margin="10,10,10,10">
-        <Button x:Name="PlayButton" Content="Play" HorizontalAlignment="Left" Margin="72,256,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" IsDefault="True" Click="PlayButton_Click" />
-        <Button x:Name="OptionsButton" Content="Options" HorizontalAlignment="Left" Margin="50,316,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" Click="OptionsButton_Click"/>
-        <Button x:Name="Credits" Content="Credits" HorizontalAlignment="Left" Margin="57,366,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" Click="Credits_Click" />
-        <Button x:Name="Exit" Content="Exit" HorizontalAlignment="Left" Margin="75,416,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" IsCancel="True" Click="Exit_Click" />
-    </Grid>
+    <Border Background="#FFDADADA"
+            BorderBrush="Gray"
+            BorderThickness="1"
+            CornerRadius="10"
+            Grid.ColumnSpan="2"
+            Grid.RowSpan="2">
+        <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Button x:Name="Exit" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Click="Exit_Click">
+            <Button.Content>
+                <StackPanel>
+                        <Image Source="Assets/Icons/Dark/Exit.png" Stretch="UniformToFill"/>
+                    </StackPanel>
+            </Button.Content>
+        </Button>
+        <Button x:Name="Back" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Click="Back_Click">
+            <Button.Content>
+                <StackPanel>
+                        <Image Source="Assets/Icons/Dark/Back.png" Stretch="UniformToFill"/>
+                    </StackPanel>
+            </Button.Content>
+        </Button>
+            <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Button x:Name="PlayButton" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Click="PlayButton_Click" >
+                <Button.Content>
+                    <StackPanel>
+                            <Image Source="Assets/Icons/Dark/Play.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" Margin="10,10,10,10" Click="Credits_Click">
+                <Button.Content>
+                    <StackPanel>
+                            <Image Source="Assets/Icons/Dark/Credits.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="OptionsButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="10,10,10,10" Click="OptionsButton_Click">
+                <Button.Content>
+                    <StackPanel>
+                            <Image Source="Assets/Icons/Dark/Settings.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+        <!--
+        <Border Grid.Column="0" Grid.Row ="0" BorderBrush="DarkGoldenrod" BorderThickness="5"></Border>
+        <Border Grid.Column="0" Grid.Row ="1" BorderBrush="Blue" BorderThickness="5"></Border>
+        <Border Grid.Column="1" Grid.RowSpan="1" BorderBrush="Red" BorderThickness="5"></Border>-->
+            <Frame x:Name="PageViewer" Source="Pages/Default Page.xaml" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden" Navigating="PageViewer_Navigating" Background="#F1F1F1F1" Style="{StaticResource RoundedFrame}" />
+        </Grid>
+    </Border>
 </Window>
