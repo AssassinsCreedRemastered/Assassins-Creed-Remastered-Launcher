@@ -11,11 +11,6 @@
 
   <ItemGroup>
     <None Remove="Assets\background3.jpg" />
-    <None Remove="Assets\Icons\Back.png" />
-    <None Remove="Assets\Icons\Credits.png" />
-    <None Remove="Assets\Icons\Exit.png" />
-    <None Remove="Assets\Icons\Play.png" />
-    <None Remove="Assets\Icons\Settings.png" />
     <None Remove="Back.png" />
     <None Remove="Credits.png" />
     <None Remove="Exit.png" />
@@ -39,20 +34,15 @@
   <ItemGroup>
     <Content Include="Assets\background3.jpg" />
     <Content Include="Assets\icon.ico" />
-    <Content Include="Assets\Icons\Back.png" />
-    <Content Include="Assets\Icons\Credits.png" />
-    <Content Include="Assets\Icons\Exit.png" />
-    <Content Include="Assets\Icons\Play.png" />
-    <Content Include="Assets\Icons\Settings.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Back.png" />
-    <Resource Include="Credits.png" />
-    <Resource Include="Exit.png" />
+    <Resource Include="Assets\Icons\Back.png" />
+    <Resource Include="Assets\Icons\Credits.png" />
+    <Resource Include="Assets\Icons\Exit.png" />
     <Resource Include="Pages\background3.jpg" />
-    <Resource Include="Play.png" />
-    <Resource Include="Settings.png" />
+    <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Settings.png" />
   </ItemGroup>
 
 </Project>
