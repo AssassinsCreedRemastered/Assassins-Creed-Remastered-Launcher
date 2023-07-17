@@ -133,6 +133,24 @@
                     </Button.Template>
                 </Button>
             </StackPanel>
+            <Button x:Name="Update" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="10,10,10,10" Cursor="Hand" Grid.Column="0" Grid.Row="1" Click="Update_Click">
+                <Button.Content>
+                    <StackPanel>
+                        <Image Source="/Assets/Icons/Update.png" Stretch="UniformToFill"/>
+                        <TextBlock Text="Update" FontSize="16" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
             <Frame x:Name="PageViewer" Grid.Column="1" Grid.Row="1" Source="Pages/Default.xaml" NavigationUIVisibility="Hidden" Background="#F1F1F1F1" Style="{StaticResource RoundedFrame}" ></Frame>
         </Grid>
     </Border>

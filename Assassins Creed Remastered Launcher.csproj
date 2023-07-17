@@ -17,6 +17,8 @@
     <None Remove="Pages\background3.jpg" />
     <None Remove="Play.png" />
     <None Remove="Settings.png" />
+    <None Remove="Update.png" />
+    <None Remove="Version.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +39,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="ListofSupportedResolutions.txt" />
+    <EmbeddedResource Include="Version.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +49,7 @@
     <Resource Include="Assets\background3.jpg" />
     <Resource Include="Assets\Icons\Play.png" />
     <Resource Include="Assets\Icons\Settings.png" />
+    <Resource Include="Assets\Icons\Update.png" />
   </ItemGroup>
 
 </Project>

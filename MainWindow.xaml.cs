@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -83,7 +85,6 @@ namespace Assassins_Creed_Remastered_Launcher
         {
             try
             {
-                
                 Process uMod = new Process();
                 Process Game = new Process();
                 uMod.StartInfo.WorkingDirectory = path + @"\uMod";
@@ -113,6 +114,69 @@ namespace Assassins_Creed_Remastered_Launcher
         private void Options_Click(object sender, RoutedEventArgs e)
         {
             PageViewer.Navigate(new Uri("Pages/Options.xaml", UriKind.Relative));
+        }
+
+        private void Update_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string currentVersion = "";
+                string newestVersion = "";
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assassins_Creed_Remastered_Launcher.Version.txt")))
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (line != "")
+                        {
+                            Console.WriteLine("Current Version: " + line);
+                            currentVersion = line;
+                        }
+                        line = sr.ReadLine();
+                    }
+                }
+                HttpWebRequest SourceText = (HttpWebRequest)HttpWebRequest.Create("https://raw.githubusercontent.com/AssassinsCreedRemastered/Assassins-Creed-Remastered-Launcher/Version/Version.txt");
+                SourceText.UserAgent = "Mozilla/5.0";
+                var response = SourceText.GetResponse();
+                var content = response.GetResponseStream();
+                using (var reader = new StreamReader(content))
+                {
+                    string fileContent = reader.ReadToEnd();
+                    string[] lines = fileContent.Split(new char[] { '\n' });
+                    foreach (string line in lines)
+                    {
+                        if (line != "")
+                        {
+                            Console.WriteLine(line);
+                            newestVersion = line;
+                        }
+                    }
+                }
+                if (currentVersion == newestVersion)
+                {
+                    MessageBox.Show("Newest version is installed.");
+                } else
+                {
+                    MessageBoxResult result = MessageBox.Show("New version of the launcher found. Do you want to update?", "Confirmation", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        Process updater = new Process();
+                        updater.StartInfo.FileName = "Assassins Creed Remastered Launcher Updater.exe";
+                        updater.StartInfo.WorkingDirectory = path;
+                        updater.StartInfo.UseShellExecute = true;
+                        updater.Start();
+                        Environment.Exit(0);
+                    } else
+                    {
+                        return;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
         }
     }
 }
