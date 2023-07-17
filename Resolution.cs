@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ACRemasteredLauncher
+namespace Assassins_Creed_Remastered_Launcher
 {
-    class Resolutions
+    class Resolution
     {
-        public string Resolution { get; set; }
+        public string? Res { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
     }

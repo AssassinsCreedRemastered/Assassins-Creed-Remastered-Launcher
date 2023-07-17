@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ACRemasteredLauncher
+namespace Assassins_Creed_Remastered_Launcher.Pages
 {
     /// <summary>
-    /// Interaction logic for Default_Page.xaml
+    /// Interaction logic for Default.xaml
     /// </summary>
-    public partial class Default_Page : Page
+    public partial class Default : Page
     {
-        public Default_Page()
+        public Default()
         {
             InitializeComponent();
         }

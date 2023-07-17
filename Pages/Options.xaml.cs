@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -16,66 +15,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace ACRemasteredLauncher.Pages
+namespace Assassins_Creed_Remastered_Launcher.Pages
 {
     /// <summary>
-    /// Interaction logic for Options_Page.xaml
+    /// Interaction logic for Options.xaml
     /// </summary>
-    public partial class Options_Page : Page
+    public partial class Options : Page
     {
-        public Options_Page()
+        public Options()
         {
             InitializeComponent();
         }
 
         // Global
-        List<Resolutions> compatibleResolutions = new List<Resolutions>();
+        List<Resolution> compatibleResolutions = new List<Resolution>();
         private string path = "";
 
         // Functions
-        // Used to find all of the supported resolutions
-        private async Task FindSupportedResolutions()
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("ACRemasteredLauncher.ListofSupportedResolutions.txt")))
-                {
-                    string line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        string[] splitLine = line.Split('x');
-                        if (double.Parse(splitLine[0]) < System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) < System.Windows.SystemParameters.PrimaryScreenHeight)
-                        {
-                            Resolutions newRes = new Resolutions();
-                            newRes.Resolution = line;
-                            newRes.Width = double.Parse(splitLine[0]);
-                            newRes.Height = double.Parse(splitLine[1]);
-                            compatibleResolutions.Add(newRes);
-                            ResolutionsList.Items.Add(newRes.Resolution);
-                        }
-                        else if (double.Parse(splitLine[0]) == System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) == System.Windows.SystemParameters.PrimaryScreenHeight)
-                        {
-                            Resolutions newRes = new Resolutions();
-                            newRes.Resolution = line;
-                            newRes.Width = double.Parse(splitLine[0]);
-                            newRes.Height = double.Parse(splitLine[1]);
-                            compatibleResolutions.Add(newRes);
-                            ResolutionsList.Items.Add(newRes.Resolution);
-                            ResolutionsList.SelectedIndex = ResolutionsList.Items.IndexOf(newRes.Resolution);
-                            break;
-                        };
-                        line = sr.ReadLine();
-                    };
-                };
-                await Task.Delay(10);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return;
-            }
-        }
-
         // Get Path where AC installation is
         private async void GetDirectory()
         {
@@ -85,6 +41,49 @@ namespace ACRemasteredLauncher.Pages
                 {
                     path = sr.ReadLine() + @"\";
                 }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Used to find all of the supported resolutions
+        private async Task FindSupportedResolutions()
+        {
+            try
+            {
+                using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assassins_Creed_Remastered_Launcher.ListofSupportedResolutions.txt")))
+                {
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        string[] splitLine = line.Split('x');
+                        if (double.Parse(splitLine[0]) < System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) < System.Windows.SystemParameters.PrimaryScreenHeight)
+                        {
+                            Resolution newRes = new Resolution();
+                            newRes.Res = line;
+                            newRes.Width = double.Parse(splitLine[0]);
+                            newRes.Height = double.Parse(splitLine[1]);
+                            compatibleResolutions.Add(newRes);
+                            ResolutionsList.Items.Add(newRes.Res);
+                        }
+                        else if (double.Parse(splitLine[0]) == System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) == System.Windows.SystemParameters.PrimaryScreenHeight)
+                        {
+                            Resolution newRes = new Resolution();
+                            newRes.Res = line;
+                            newRes.Width = double.Parse(splitLine[0]);
+                            newRes.Height = double.Parse(splitLine[1]);
+                            compatibleResolutions.Add(newRes);
+                            ResolutionsList.Items.Add(newRes.Res);
+                            ResolutionsList.SelectedIndex = ResolutionsList.Items.IndexOf(newRes.Res);
+                            break;
+                        };
+                        line = sr.ReadLine();
+                    };
+                };
                 await Task.Delay(10);
             }
             catch (Exception ex)
@@ -143,7 +142,8 @@ namespace ACRemasteredLauncher.Pages
                                 if (int.Parse(split[1]) == 1)
                                 {
                                     VSync.IsChecked = true;
-                                } else
+                                }
+                                else
                                 {
                                     VSync.IsChecked = false;
                                 }
@@ -162,7 +162,8 @@ namespace ACRemasteredLauncher.Pages
                     if (ResolutionsList.Items.Contains(currentResolution))
                     {
                         ResolutionsList.SelectedIndex = ResolutionsList.Items.IndexOf(currentResolution);
-                    } else
+                    }
+                    else
                     {
                         ResolutionsList.SelectedIndex = ResolutionsList.Items.Count - 1;
                     }
@@ -191,7 +192,7 @@ namespace ACRemasteredLauncher.Pages
                             if (line.EndsWith("Overhaul Fixed For ReShade.tpf"))
                             {
                                 OverhaulMod.IsChecked = true;
-                            } 
+                            }
                             else if (line.EndsWith("AC1 PS Buttons.tpf"))
                             {
                                 PS3Buttons.IsChecked = true;
@@ -216,7 +217,8 @@ namespace ACRemasteredLauncher.Pages
                 if (File.Exists(path + @"d3d9.dll") && File.Exists(path + @"dxgi.dll"))
                 {
                     ReShade.IsChecked = true;
-                } else
+                }
+                else
                 {
                     ReShade.IsChecked = false;
                 }
@@ -247,9 +249,9 @@ namespace ACRemasteredLauncher.Pages
                                     sw.Write(line + "\r\n");
                                     break;
                                 case string x when line.StartsWith("DisplayWidth"):
-                                    foreach (Resolutions resolution in compatibleResolutions)
+                                    foreach (Resolution resolution in compatibleResolutions)
                                     {
-                                        if (resolution.Resolution == ResolutionsList.SelectedItem.ToString())
+                                        if (resolution.Res == ResolutionsList.SelectedItem.ToString())
                                         {
                                             sw.Write("DisplayWidth=" + resolution.Width + "\r\n");
                                             break;
@@ -257,9 +259,9 @@ namespace ACRemasteredLauncher.Pages
                                     }
                                     break;
                                 case string x when line.StartsWith("DisplayHeight"):
-                                    foreach (Resolutions resolution in compatibleResolutions)
+                                    foreach (Resolution resolution in compatibleResolutions)
                                     {
-                                        if (resolution.Resolution == ResolutionsList.SelectedItem.ToString())
+                                        if (resolution.Res == ResolutionsList.SelectedItem.ToString())
                                         {
                                             sw.Write("DisplayHeight=" + resolution.Height + "\r\n");
                                             break;
@@ -273,7 +275,8 @@ namespace ACRemasteredLauncher.Pages
                                     if (VSync.IsChecked == true)
                                     {
                                         sw.Write("VSynch=1" + "\r\n");
-                                    } else
+                                    }
+                                    else
                                     {
                                         sw.Write("VSynch=0" + "\r\n");
                                     }
@@ -304,12 +307,13 @@ namespace ACRemasteredLauncher.Pages
                     using (StreamWriter sw = new StreamWriter(path + @"uMod\templates\ac1temp.txt"))
                     {
                         string line = sr.ReadLine();
-                        while (line != null) 
+                        while (line != null)
                         {
                             if (line.StartsWith("Add_true:"))
                             {
                                 break;
-                            } else
+                            }
+                            else
                             {
                                 sw.WriteLine(line);
                             }
@@ -368,15 +372,13 @@ namespace ACRemasteredLauncher.Pages
         }
 
         // Events
-        // After the Page has loaded
-        private async void Options_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             GetDirectory();
             await FindSupportedResolutions();
             await ReadConfigFiles();
         }
 
-        // Save settings when button Save is clicked
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             try
