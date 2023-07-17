@@ -43,7 +43,7 @@
             <!--Exit-->
             <Button x:Name="Exit" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Exit_Click">
                 <Button.Content>
-                    <Image Source="/Exit.png" Stretch="UniformToFill"/>
+                    <Image Source="/Assets/Icons/Exit.png" Stretch="UniformToFill"/>
                 </Button.Content>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
@@ -59,7 +59,7 @@
             <!--Back-->
             <Button x:Name="Back" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Back_Click">
                 <Button.Content>
-                    <Image Source="/Back.png"/>
+                    <Image Source="/Assets/Icons/Back.png"/>
                 </Button.Content>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
@@ -79,7 +79,7 @@
                 <Button x:Name="Play" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,10,10,10" Cursor="Hand" Click="Play_Click">
                     <Button.Content>
                         <StackPanel>
-                            <Image Source="/Play.png" Stretch="UniformToFill"/>
+                            <Image Source="/Assets/Icons/Play.png" Stretch="UniformToFill"/>
                             <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
@@ -98,7 +98,7 @@
                 <Button x:Name="Credits" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" FontSize="24" BorderBrush="{x:Null}" Margin="10,10,10,10" Cursor="Hand" Click="Credits_Click">
                     <Button.Content>
                         <StackPanel>
-                            <Image Source="/Credits.png" Stretch="UniformToFill"/>
+                            <Image Source="/Assets/Icons/Credits.png" Stretch="UniformToFill"/>
                             <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
@@ -117,7 +117,7 @@
                 <Button x:Name="Options" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="10,10,10,10" Cursor="Hand" Click="Options_Click">
                     <Button.Content>
                         <StackPanel>
-                            <Image Source="/Settings.png" Stretch="UniformToFill"/>
+                            <Image Source="/Assets/Icons/Settings.png" Stretch="UniformToFill"/>
                             <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>

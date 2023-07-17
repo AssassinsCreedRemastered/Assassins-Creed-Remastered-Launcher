@@ -10,7 +10,7 @@
     <Grid>
         <Rectangle RadiusX="10" RadiusY="10">
             <Rectangle.Fill>
-                <ImageBrush x:Name="Background" ImageSource="/Pages/background3.jpg" />
+                <ImageBrush ImageSource="/Assets/background3.jpg" />
             </Rectangle.Fill>
         </Rectangle>
     </Grid>

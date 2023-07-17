@@ -83,12 +83,15 @@ namespace Assassins_Creed_Remastered_Launcher
         {
             try
             {
+                
                 Process uMod = new Process();
                 Process Game = new Process();
                 uMod.StartInfo.WorkingDirectory = path + @"\uMod";
                 uMod.StartInfo.FileName = "uMod.exe";
+                uMod.StartInfo.UseShellExecute = true;
                 Game.StartInfo.WorkingDirectory = path;
                 Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                Game.StartInfo.UseShellExecute = true;
                 uMod.Start();
                 Game.Start();
                 Game.WaitForExit();

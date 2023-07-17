@@ -10,10 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\background3.jpg" />
     <None Remove="Back.png" />
     <None Remove="Credits.png" />
     <None Remove="Exit.png" />
+    <None Remove="ListofSupportedResolutions.txt" />
     <None Remove="Pages\background3.jpg" />
     <None Remove="Play.png" />
     <None Remove="Settings.png" />
@@ -32,15 +32,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\background3.jpg" />
     <Content Include="Assets\icon.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ListofSupportedResolutions.txt" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Exit.png" />
-    <Resource Include="Pages\background3.jpg" />
+    <Resource Include="Assets\background3.jpg" />
     <Resource Include="Assets\Icons\Play.png" />
     <Resource Include="Assets\Icons\Settings.png" />
   </ItemGroup>
