@@ -1,7 +1,7 @@
-﻿<Application x:Class="ACRemasteredLauncher.App"
+﻿<Application x:Class="Assassins_Creed_Remastered_Launcher.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ACRemasteredLauncher"
+             xmlns:local="clr-namespace:Assassins_Creed_Remastered_Launcher"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
          
