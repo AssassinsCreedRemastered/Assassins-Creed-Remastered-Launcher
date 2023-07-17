@@ -6,6 +6,53 @@
     <RootNamespace>Assassins_Creed_Remastered_Launcher</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\background3.jpg" />
+    <None Remove="Assets\Icons\Back.png" />
+    <None Remove="Assets\Icons\Credits.png" />
+    <None Remove="Assets\Icons\Exit.png" />
+    <None Remove="Assets\Icons\Play.png" />
+    <None Remove="Assets\Icons\Settings.png" />
+    <None Remove="Back.png" />
+    <None Remove="Credits.png" />
+    <None Remove="Exit.png" />
+    <None Remove="Pages\background3.jpg" />
+    <None Remove="Play.png" />
+    <None Remove="Settings.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\background3.jpg" />
+    <Content Include="Assets\icon.ico" />
+    <Content Include="Assets\Icons\Back.png" />
+    <Content Include="Assets\Icons\Credits.png" />
+    <Content Include="Assets\Icons\Exit.png" />
+    <Content Include="Assets\Icons\Play.png" />
+    <Content Include="Assets\Icons\Settings.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Back.png" />
+    <Resource Include="Credits.png" />
+    <Resource Include="Exit.png" />
+    <Resource Include="Pages\background3.jpg" />
+    <Resource Include="Play.png" />
+    <Resource Include="Settings.png" />
+  </ItemGroup>
 
 </Project>
