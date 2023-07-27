@@ -18,6 +18,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IWshRuntimeLibrary;
 using File = System.IO.File;
+using DiscordRPC;
+using System.Windows.Threading;
+using System.Timers;
 
 namespace Assassins_Creed_Remastered_Launcher
 {
@@ -26,10 +29,16 @@ namespace Assassins_Creed_Remastered_Launcher
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DiscordRpcClient client;
+        private Stopwatch stopwatch = new Stopwatch();
+        private Timer timer;
+        private string timeElapsed;
+
         public MainWindow()
         {
             InitializeComponent();
             GetDirectory();
+            IdleRichPresence();
             GC.Collect();
         }
 
@@ -55,6 +64,80 @@ namespace Assassins_Creed_Remastered_Launcher
             }
         }
 
+        // Discord Rich Presence when in Launcher
+        private void IdleRichPresence()
+        {
+            client = new DiscordRpcClient("");
+            client.Initialize();
+            client.SetPresence(new RichPresence()
+            {
+                State = "Idle",
+                Assets = new Assets()
+                {
+                    LargeImageKey = "icon1",
+                    SmallImageKey = "icon1"
+                }
+            });
+        }
+
+        private void InGameRichPresence()
+        {
+            timer = new Timer();
+            timer.Interval = 10;
+            timer.Elapsed += timerElapsed;
+            timer.Start();
+            stopwatch.Start();
+        }
+
+        private void timerElapsed(object sender, ElapsedEventArgs e)
+        {
+            UpdateRichPresence();
+        }
+
+        // Update Discord Rich Presence
+        private void UpdateRichPresence()
+        {
+            try
+            {
+                timeElapsedUpdate();
+                client.SetPresence(new RichPresence()
+                {
+                    State = "Playing for " + timeElapsed,
+                    Assets = new Assets()
+                    {
+                        LargeImageKey = "icon1",
+                        SmallImageKey = "icon1"
+                    }
+                });
+                if (timer.Interval == 10)
+                {
+                    timer.Interval = 60000;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        
+        // Format time
+        private void timeElapsedUpdate()
+        {
+            if (stopwatch.Elapsed.Days > 0)
+            {
+                timeElapsed = stopwatch.Elapsed.Days + " days";
+            } 
+            else if (stopwatch.Elapsed.Hours > 0)
+            {
+                timeElapsed = stopwatch.Elapsed.Hours + " hours";
+            } 
+            else if (stopwatch.Elapsed.Minutes >= 0)
+            {
+                timeElapsed = stopwatch.Elapsed.Minutes + " minutes";
+            }
+
+        }
+
         // Events
         // Used for dragging the window
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -68,6 +151,9 @@ namespace Assassins_Creed_Remastered_Launcher
         // Exit the launcher when this button is pressed
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            stopwatch.Stop();
+            stopwatch.Reset();
+            client.Dispose();
             Environment.Exit(0);
         }
 
@@ -95,8 +181,12 @@ namespace Assassins_Creed_Remastered_Launcher
                 Game.StartInfo.UseShellExecute = true;
                 uMod.Start();
                 Game.Start();
+                InGameRichPresence();
                 Game.WaitForExit();
                 uMod.CloseMainWindow();
+                IdleRichPresence();
+                stopwatch.Stop();
+                stopwatch.Reset();
                 await Task.Delay(10);
             }
             catch (Exception ex)

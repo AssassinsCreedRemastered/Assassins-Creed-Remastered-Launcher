@@ -79,5 +79,14 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 UseShellExecute = true,
             });
         }
+
+        private void Icon_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.deviantart.com/sony33d/art/Assassin-s-Creed-Icon-Pack-PNG-ICO-555468864",
+                UseShellExecute = true,
+            });
+        }
     }
 }

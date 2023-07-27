@@ -43,6 +43,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Exit.png" />
