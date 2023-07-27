@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
 
 namespace Assassins_Creed_Remastered_Launcher.Pages
 {
@@ -45,23 +46,45 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
+
+
 
         // Used to find all of the supported resolutions
         private async Task FindSupportedResolutions()
         {
             try
             {
+                Screen[] allScreens = Screen.AllScreens;
+                int resolutionWidth = 0;
+                int resolutionHeight = 0;
+
+                foreach (Screen screen in allScreens)
+                {
+                    Console.WriteLine("Device Name: " + screen.DeviceName);
+                    Console.WriteLine("Bounds: " + screen.Bounds);
+                    Console.WriteLine("Working Area: " + screen.WorkingArea);
+                    Console.WriteLine("Primary Screen: " + screen.Primary);
+                    Console.WriteLine("Bits Per Pixel: " + screen.BitsPerPixel);
+                    Console.WriteLine("Screen Width: " + screen.Bounds.Width);
+                    Console.WriteLine("Screen Height: " + screen.Bounds.Height);
+                    Console.WriteLine("------------------------------");
+                    if (resolutionWidth < screen.Bounds.Width)
+                    {
+                        resolutionWidth = screen.Bounds.Width;
+                        resolutionHeight = screen.Bounds.Height;
+                    };
+                }
                 using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assassins_Creed_Remastered_Launcher.ListofSupportedResolutions.txt")))
                 {
                     string line = sr.ReadLine();
                     while (line != null)
                     {
                         string[] splitLine = line.Split('x');
-                        if (double.Parse(splitLine[0]) < System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) < System.Windows.SystemParameters.PrimaryScreenHeight)
+                        if (double.Parse(splitLine[0]) < resolutionWidth && double.Parse(splitLine[1]) < resolutionHeight)
                         {
                             Resolution newRes = new Resolution();
                             newRes.Res = line;
@@ -70,7 +93,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                             compatibleResolutions.Add(newRes);
                             ResolutionsList.Items.Add(newRes.Res);
                         }
-                        else if (double.Parse(splitLine[0]) == System.Windows.SystemParameters.PrimaryScreenWidth && double.Parse(splitLine[1]) == System.Windows.SystemParameters.PrimaryScreenHeight)
+                        else if (double.Parse(splitLine[0]) == resolutionWidth && double.Parse(splitLine[1]) == resolutionHeight)
                         {
                             Resolution newRes = new Resolution();
                             newRes.Res = line;
@@ -88,7 +111,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -105,7 +128,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -172,7 +195,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -203,7 +226,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
             await Task.Delay(10);
@@ -226,7 +249,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -292,7 +315,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -336,7 +359,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -366,7 +389,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
@@ -390,7 +413,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
         }
