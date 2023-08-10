@@ -64,14 +64,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
 
                 foreach (Screen screen in allScreens)
                 {
-                    Console.WriteLine("Device Name: " + screen.DeviceName);
-                    Console.WriteLine("Bounds: " + screen.Bounds);
-                    Console.WriteLine("Working Area: " + screen.WorkingArea);
-                    Console.WriteLine("Primary Screen: " + screen.Primary);
-                    Console.WriteLine("Bits Per Pixel: " + screen.BitsPerPixel);
-                    Console.WriteLine("Screen Width: " + screen.Bounds.Width);
-                    Console.WriteLine("Screen Height: " + screen.Bounds.Height);
-                    Console.WriteLine("------------------------------");
                     if (resolutionWidth < screen.Bounds.Width)
                     {
                         resolutionWidth = screen.Bounds.Width;
