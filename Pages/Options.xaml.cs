@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace Assassins_Creed_Remastered_Launcher.Pages
 {
@@ -29,6 +30,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
         }
 
         // Global
+        List<string> CustomuMods = new List<string>();
         List<Resolution> compatibleResolutions = new List<Resolution>();
         private string path = "";
 
@@ -50,7 +52,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 return;
             }
         }
-
 
 
         // Used to find all of the supported resolutions
@@ -312,6 +313,27 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
         }
 
+        private async Task SaveUserAddeduMods()
+        {
+            try
+            {
+                CustomuMods.Clear();
+                string[] customMods = Directory.GetFiles(path + @"\Mods\Custom uMods\");
+                foreach (string customMod in customMods)
+                {
+                    if (customMod.EndsWith(".tpf"))
+                    {
+                        CustomuMods.Add(System.IO.Path.GetFileName(customMod));
+                    }
+                };
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
         // Saving uMod settings (Overhaul mod, PSButtons etc..)
         private async Task SaveuModSettings()
         {
@@ -341,6 +363,13 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         if (PS3Buttons.IsChecked == true)
                         {
                             sw.Write("Add_true:" + path + @"Mods\PS3Buttons\AC1 PS Buttons.tpf" + "\n");
+                        }
+                        if (CustomuMods.Count > 0)
+                        {
+                            foreach (string mod in CustomuMods)
+                            {
+                                sw.Write("Add_true:" + path + @"Mods\Custom uMods\" + mod + "\n");
+                            }
                         }
                     }
                 }
@@ -394,10 +423,12 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             await ReadConfigFiles();
         }
 
+        // Save Settings
         private async void Save_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                await SaveUserAddeduMods();
                 await SaveGameSettings();
                 await SaveuModSettings();
                 await SaveReShade();
@@ -407,6 +438,29 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             {
                 System.Windows.MessageBox.Show(ex.Message);
                 return;
+            }
+        }
+
+        // Opens Custom uMods folder
+        private async void AddCustomuMods_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo
+                {
+                    FileName = "explorer.exe",
+                    Arguments = path + @"Mods\Custom uMods\",
+                    UseShellExecute = false
+                };
+                Process.Start(processInfo);
+                System.Windows.MessageBox.Show("Drag all of the .tpf files in the open directory and then press OK.");
+                await Task.Delay(10);
+                await SaveUserAddeduMods();
+                await SaveuModSettings();
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
             }
         }
     }

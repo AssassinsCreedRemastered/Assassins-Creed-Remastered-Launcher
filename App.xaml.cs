@@ -74,7 +74,7 @@ namespace Assassins_Creed_Remastered_Launcher
                 stopwatch.Stop();
                 stopwatch.Reset();
                 await Task.Delay(10);
-                // Environment.Exit(0);
+                Environment.Exit(0);
             }
             catch (Exception ex)
             {

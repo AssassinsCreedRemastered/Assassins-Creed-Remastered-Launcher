@@ -160,6 +160,8 @@
                         <CheckBox x:Name="ReShade" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
+                <!--Custom uMods-->
+                <Button x:Name="AddCustomuMods" Grid.Column="1" Margin="0,10,0,10" Content="Add Custom uMod (Texmod) mods" FontSize="24" Background="#7FD0D0D0" Foreground="White" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Click="AddCustomuMods_Click"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

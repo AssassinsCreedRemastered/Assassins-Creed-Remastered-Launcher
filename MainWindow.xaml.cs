@@ -55,6 +55,10 @@ namespace Assassins_Creed_Remastered_Launcher
                 {
                     path = sr.ReadLine();
                 }
+                if (!Directory.Exists(path + @"\Mods\Custom uMods\"))
+                {
+                    Directory.CreateDirectory(path + @"\Mods\Custom uMods\");
+                }
                 await Task.Delay(10);
             }
             catch (Exception ex)
