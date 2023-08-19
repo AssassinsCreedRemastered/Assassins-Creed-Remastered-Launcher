@@ -356,10 +356,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                             }
                             line = sr.ReadLine();
                         }
-                        if (OverhaulMod.IsChecked == true)
-                        {
-                            sw.Write("Add_true:" + path + @"Mods\Overhaul\Overhaul Fixed For ReShade.tpf" + "\n");
-                        }
                         if (PS3Buttons.IsChecked == true)
                         {
                             sw.Write("Add_true:" + path + @"Mods\PS3Buttons\AC1 PS Buttons.tpf" + "\n");
@@ -370,6 +366,10 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                             {
                                 sw.Write("Add_true:" + path + @"Mods\Custom uMods\" + mod + "\n");
                             }
+                        }
+                        if (OverhaulMod.IsChecked == true)
+                        {
+                            sw.Write("Add_true:" + path + @"Mods\Overhaul\Overhaul Fixed For ReShade.tpf" + "\n");
                         }
                     }
                 }
@@ -433,6 +433,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 await SaveuModSettings();
                 await SaveReShade();
                 await Task.Delay(10);
+                System.Windows.MessageBox.Show("Changes are saved");
             }
             catch (Exception ex)
             {

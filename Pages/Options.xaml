@@ -78,7 +78,7 @@
             </Grid.Effect>
             <Rectangle Grid.ColumnSpan="2" Grid.RowSpan="2" RadiusX="10" RadiusY="10">
                 <Rectangle.Fill>
-                    <ImageBrush ImageSource="/Assets/background3.jpg"/>
+                    <ImageBrush ImageSource="/Assets/background.png" Stretch="UniformToFill"/>
                 </Rectangle.Fill>
             </Rectangle>
         </Grid>

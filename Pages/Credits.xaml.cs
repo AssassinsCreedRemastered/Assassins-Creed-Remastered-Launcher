@@ -88,5 +88,14 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 UseShellExecute = true,
             });
         }
+
+        private void Assets_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://www.nexusmods.com/users/70787823",
+                UseShellExecute = true,
+            });
+        }
     }
 }

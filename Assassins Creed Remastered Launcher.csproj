@@ -16,6 +16,7 @@
     <None Remove="Exit.png" />
     <None Remove="ListofSupportedResolutions.txt" />
     <None Remove="Pages\background3.jpg" />
+    <None Remove="Pages\O5eyboQrS.png" />
     <None Remove="Play.png" />
     <None Remove="Settings.png" />
     <None Remove="Update.png" />
@@ -51,10 +52,10 @@
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Exit.png" />
-    <Resource Include="Assets\background3.jpg" />
     <Resource Include="Assets\Icons\Play.png" />
     <Resource Include="Assets\Icons\Settings.png" />
     <Resource Include="Assets\Icons\Update.png" />
+    <Resource Include="Assets\background.png" />
   </ItemGroup>
 
 </Project>
