@@ -1,0 +1,297 @@
+﻿<Page x:Class="Assassins_Creed_Remastered_Launcher.Pages.Mods"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Assassins_Creed_Remastered_Launcher.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Mods">
+    <Page.Resources>
+        <Style x:Key="NoScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <ScrollContentPresenter Grid.Column="0" Grid.Row="0" ContentTemplate="{TemplateBinding ContentTemplate}" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Page.Resources>
+    <Grid>
+        <Grid>
+            <Grid.Effect>
+                <BlurEffect Radius="10"/>
+            </Grid.Effect>
+            <Rectangle>
+                <Rectangle.Fill>
+                    <ImageBrush ImageSource="/Assets/background.png" Stretch="UniformToFill"/>
+                </Rectangle.Fill>
+            </Rectangle>
+        </Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="55"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
+            <!--Button Container-->
+            <Border Grid.Row="0" BorderBrush="White" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5" Height="50" VerticalAlignment="Top">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <!--Save Settings Button-->
+                    <Button Grid.Column="0" x:Name="SaveSettings" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="0,0,0,0" Cursor="Hand" Click="SaveSettings_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Save" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Ok.png" Stretch="UniformToFill" Height="36" Width="36"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <!--Add a Mod Button-->
+                    <Button x:Name="AddMod" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="0,0,40,0" Cursor="Hand" Click="AddMod_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Add a mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Add.png" Stretch="UniformToFill" Height="36" Width="36"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <!--Remove selected mod button-->
+                    <Button x:Name="RemoveSelectedMod" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="40,0,0,0" Cursor="Hand" Click="RemoveSelectedMod_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Remove selected mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Remove.png" Stretch="UniformToFill" Height="36" Width="36"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <!--Move selected mod up-->
+                    <Button x:Name="MoveSelectedModUp" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="0,0,60,0" Cursor="Hand" Click="MoveSelectedModUp_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Remove selected mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Up.png" Stretch="UniformToFill" Height="36" Width="36"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <!--Move selected mod down-->
+                    <Button x:Name="MoveSelectedModDown" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="20,0,0,0" Cursor="Hand" Click="MoveSelectedModDown_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Remove selected mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Down.png" Stretch="UniformToFill" Height="36" Width="36"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+            <TextBlock Grid.Row="1" Text="Enabled Mods" FontSize="36" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2,0,0" Foreground="White"/>
+            
+            <!--Enabled Mods-->
+            <Border Grid.Row="2" BorderBrush="White" BorderThickness="1.5" Margin="5,0,5,0" CornerRadius="5">
+                <ScrollViewer Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="EnabledModsList" Background="Transparent" Foreground="White" AllowDrop="True" BorderBrush="Transparent" SelectionChanged="EnabledModsList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Bd"
+                                BorderBrush="Transparent"
+                                BorderThickness="1"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5">
+                                                <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" FontSize="24" Margin="1,1,1,1"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="White" />
+                                                    <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                                                    <Setter Property="Foreground" Value="White" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Row="3" BorderBrush="White" BorderThickness="1.5" Margin="5,5,5,0" CornerRadius="5">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="EnableSelectedMod" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="0,0,10,0" Cursor="Hand" Click="EnableSelectedMod_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Enable selected mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Up (Light).png" Stretch="UniformToFill" Height="40" Width="40"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <Button x:Name="DisableSelectedMod" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" IsDefault="True" Margin="10,0,0,0" Cursor="Hand" Click="DisableSelectedMod_Click">
+                        <Button.ToolTip>
+                            <ToolTip Content="Disable selected mod" />
+                        </Button.ToolTip>
+                        <Button.Content>
+                            <Image Source="/Assets/Icons/Down (Light).png" Stretch="UniformToFill" Height="40" Width="40"/>
+                        </Button.Content>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <TextBlock Grid.Row="4" Text="Disabled Mods" FontSize="36" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+            
+            <!--Disabled Mods-->
+            <Border Grid.Row="5" BorderBrush="White" BorderThickness="1.5" Margin="5,5,5,5" CornerRadius="5">
+                <ScrollViewer Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
+                    <ListBox x:Name="DisabledModsList" Background="Transparent" Foreground="White"  AllowDrop="True" BorderBrush="Transparent" SelectionChanged="DisabledModsList_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Cursor" Value="Hand" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <Border x:Name="Bd"
+                                BorderBrush="Transparent"
+                                BorderThickness="1"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="5">
+                                                <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" FontSize="24" Margin="1,1,1,1"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter TargetName="Bd" Property="BorderBrush" Value="White" />
+                                                    <Setter TargetName="Bd" Property="BorderThickness" Value="2" />
+                                                    <Setter Property="Foreground" Value="White" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

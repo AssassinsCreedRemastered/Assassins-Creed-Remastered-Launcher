@@ -71,7 +71,7 @@ namespace Assassins_Creed_Remastered_Launcher
         // Discord Rich Presence when in Launcher
         private void IdleRichPresence()
         {
-            client = new DiscordRpcClient("");
+            client = new DiscordRpcClient("1133864004549361686");
             client.Initialize();
             client.SetPresence(new RichPresence()
             {
@@ -175,23 +175,40 @@ namespace Assassins_Creed_Remastered_Launcher
         {
             try
             {
-                Process uMod = new Process();
-                Process Game = new Process();
-                uMod.StartInfo.WorkingDirectory = path + @"\uMod";
-                uMod.StartInfo.FileName = "uMod.exe";
-                uMod.StartInfo.UseShellExecute = true;
-                Game.StartInfo.WorkingDirectory = path;
-                Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
-                Game.StartInfo.UseShellExecute = true;
-                uMod.Start();
-                Game.Start();
-                InGameRichPresence();
-                Game.WaitForExit();
-                uMod.CloseMainWindow();
-                IdleRichPresence();
-                stopwatch.Stop();
-                stopwatch.Reset();
-                await Task.Delay(10);
+                if (App.uModStatus)
+                {
+                    Process uMod = new Process();
+                    Process Game = new Process();
+                    uMod.StartInfo.WorkingDirectory = path + @"\uMod";
+                    uMod.StartInfo.FileName = "uMod.exe";
+                    uMod.StartInfo.UseShellExecute = true;
+                    Game.StartInfo.WorkingDirectory = path;
+                    Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                    Game.StartInfo.UseShellExecute = true;
+                    uMod.Start();
+                    Game.Start();
+                    InGameRichPresence();
+                    Game.WaitForExit();
+                    await Task.Delay(500);
+                    uMod.CloseMainWindow();
+                    IdleRichPresence();
+                    stopwatch.Stop();
+                    stopwatch.Reset();
+                }
+                else
+                {
+                    Process Game = new Process();
+                    Game.StartInfo.WorkingDirectory = path;
+                    Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                    Game.StartInfo.UseShellExecute = true;
+                    Game.Start();
+                    InGameRichPresence();
+                    Game.WaitForExit();
+                    IdleRichPresence();
+                    stopwatch.Stop();
+                    stopwatch.Reset();
+                }
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -271,6 +288,11 @@ namespace Assassins_Creed_Remastered_Launcher
                 MessageBox.Show(ex.Message);
                 return;
             }
+        }
+
+        private void uMod_Click(object sender, RoutedEventArgs e)
+        {
+            PageViewer.Navigate(new Uri("Pages/Mods.xaml", UriKind.Relative));
         }
     }
 }

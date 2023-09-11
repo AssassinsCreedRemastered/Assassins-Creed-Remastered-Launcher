@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Diagnostics;
+using Microsoft.VisualBasic.Logging;
 
 namespace Assassins_Creed_Remastered_Launcher.Pages
 {
@@ -27,14 +28,22 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
         public Options()
         {
             InitializeComponent();
+            FillCheckBox();
         }
 
         // Global
-        List<string> CustomuMods = new List<string>();
         List<Resolution> compatibleResolutions = new List<Resolution>();
         private string path = "";
 
         // Functions
+        private void FillCheckBox()
+        {
+            KeyboardLayoutSelector.Items.Add("KeyboardMouse2");
+            KeyboardLayoutSelector.Items.Add("KeyboardMouse5");
+            KeyboardLayoutSelector.Items.Add("Keyboard");
+            KeyboardLayoutSelector.Items.Add("KeyboardAlt");
+        }
+
         // Get Path where AC installation is
         private async void GetDirectory()
         {
@@ -52,7 +61,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 return;
             }
         }
-
 
         // Used to find all of the supported resolutions
         private async Task FindSupportedResolutions()
@@ -115,8 +123,16 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             try
             {
                 await ReadGameConfig();
-                await ReaduModConfig();
                 await CheckReShade();
+                if (App.uModStatus)
+                {
+                    uMod.IsChecked = true;
+                }
+                else
+                {
+                    uMod.IsChecked = false;
+                }
+                await CheckEaglePatch();
                 await Task.Delay(10);
             }
             catch (Exception ex)
@@ -193,38 +209,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
         }
 
-        // Reads uMod configuration
-        private async Task ReaduModConfig()
-        {
-            try
-            {
-                if (File.Exists(path + @"uMod\templates\ac1.txt"))
-                {
-                    string[] uModConfig = File.ReadAllLines(path + @"uMod\templates\ac1.txt");
-                    foreach (string line in uModConfig)
-                    {
-                        if (line.StartsWith("Add_true:"))
-                        {
-                            if (line.EndsWith("Overhaul Fixed For ReShade.tpf"))
-                            {
-                                OverhaulMod.IsChecked = true;
-                            }
-                            else if (line.EndsWith("AC1 PS Buttons.tpf"))
-                            {
-                                PS3Buttons.IsChecked = true;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
-                return;
-            }
-            await Task.Delay(10);
-        }
-
         // Check if ReShade is enabled
         private async Task CheckReShade()
         {
@@ -242,6 +226,76 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
             catch (Exception ex)
             {
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Check if EaglePatch is enabled
+        private async Task CheckEaglePatch()
+        {
+            try
+            {
+                if (System.IO.File.Exists(App.path + @"\dinput8.dll"))
+                {
+                    EaglePatch.IsChecked = true;
+                }
+                await ReadEaglePatchConfig();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Read EaglePatch Configuration File
+        private async Task ReadEaglePatchConfig()
+        {
+            try
+            {
+                if (System.IO.File.Exists(App.path + @"\scripts\EaglePatchAC1.ini"))
+                {
+                    string[] EaglePatchConfig = File.ReadAllLines(App.path + @"\scripts\EaglePatchAC1.ini");
+                    foreach (string line in EaglePatchConfig)
+                    {
+                        List<string> splitLine = new List<string>();
+                        switch (line)
+                        {
+                            case string x when line.StartsWith("KeyboardLayout"):
+                                splitLine = line.Split('=').ToList();
+                                KeyboardLayoutSelector.SelectedIndex = int.Parse(splitLine[1]);
+                                splitLine.Clear();
+                                break;
+                            case string x when line.StartsWith("PS3Controls"):
+                                splitLine = line.Split('=').ToList();
+                                if (int.Parse(splitLine[1]) == 1)
+                                {
+                                    PS3Controls.IsChecked = true;
+                                }
+                                splitLine.Clear();
+                                break;
+                            case string x when line.StartsWith("SkipIntroVideos"):
+                                splitLine = line.Split('=').ToList();
+                                if (int.Parse(splitLine[1]) == 1)
+                                {
+                                    SkipIntroVideos.IsChecked = true;
+                                }
+                                splitLine.Clear();
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 System.Windows.MessageBox.Show(ex.Message);
                 return;
             }
@@ -313,78 +367,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
         }
 
-        private async Task SaveUserAddeduMods()
-        {
-            try
-            {
-                CustomuMods.Clear();
-                string[] customMods = Directory.GetFiles(path + @"\Mods\Custom uMods\");
-                foreach (string customMod in customMods)
-                {
-                    if (customMod.EndsWith(".tpf"))
-                    {
-                        CustomuMods.Add(System.IO.Path.GetFileName(customMod));
-                    }
-                };
-                await Task.Delay(10);
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
-            }
-        }
-
-        // Saving uMod settings (Overhaul mod, PSButtons etc..)
-        private async Task SaveuModSettings()
-        {
-            try
-            {
-                using (StreamReader sr = new StreamReader(path + @"uMod\templates\ac1.txt"))
-                {
-                    using (StreamWriter sw = new StreamWriter(path + @"uMod\templates\ac1temp.txt"))
-                    {
-                        string line = sr.ReadLine();
-                        while (line != null)
-                        {
-                            if (line.StartsWith("Add_true:"))
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                sw.WriteLine(line);
-                            }
-                            line = sr.ReadLine();
-                        }
-                        if (PS3Buttons.IsChecked == true)
-                        {
-                            sw.Write("Add_true:" + path + @"Mods\PS3Buttons\AC1 PS Buttons.tpf" + "\n");
-                        }
-                        if (CustomuMods.Count > 0)
-                        {
-                            foreach (string mod in CustomuMods)
-                            {
-                                sw.Write("Add_true:" + path + @"Mods\Custom uMods\" + mod + "\n");
-                            }
-                        }
-                        if (OverhaulMod.IsChecked == true)
-                        {
-                            sw.Write("Add_true:" + path + @"Mods\Overhaul\Overhaul Fixed For ReShade.tpf" + "\n");
-                        }
-                    }
-                }
-                File.Delete(path + @"uMod\templates\ac1.txt");
-                File.Move(path + @"uMod\templates\ac1temp.txt", path + @"uMod\templates\ac1.txt");
-                GC.Collect();
-                await Task.Delay(10);
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
-                return;
-            }
-        }
-
         // Saving ReShade choice
         private async Task SaveReShade()
         {
@@ -415,6 +397,94 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             }
         }
 
+        private async Task SaveuModStatus()
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(path + @"\uMod\Status.txt"))
+                {
+                    if (uMod.IsChecked == true)
+                    {
+                        App.uModStatus = true;
+                        sw.Write("Enabled=1");
+                    } else
+                    {
+                        App.uModStatus = false;
+                        sw.Write("Enabled=0");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        private async Task SaveEaglePatchSettings()
+        {
+            try
+            {
+                string[] EaglePatchConfigFile = File.ReadAllLines(App.path + @"\scripts\EaglePatchAC1.ini");
+                using (StreamWriter sw = new StreamWriter(App.path + @"\scripts\EaglePatchAC1.ini"))
+                {
+                    foreach (string line in EaglePatchConfigFile)
+                    {
+                        switch (line)
+                        {
+                            case string x when line.StartsWith("KeyboardLayout"):
+                                sw.Write("KeyboardLayout=" + KeyboardLayoutSelector.SelectedIndex + "\r\n");
+                                break;
+                            case string x when line.StartsWith("PS3Controls"):
+                                if (PS3Controls.IsChecked == true)
+                                {
+                                    sw.Write("PS3Controls=1\r\n");
+                                }
+                                else
+                                {
+                                    sw.Write("PS3Controls=0\r\n");
+                                }
+                                break;
+                            case string x when line.StartsWith("SkipIntroVideos"):
+                                if (SkipIntroVideos.IsChecked == true)
+                                {
+                                    sw.Write("SkipIntroVideos=1\r\n");
+                                }
+                                else
+                                {
+                                    sw.Write("SkipIntroVideos=0\r\n");
+                                }
+                                break;
+                            default:
+                                sw.Write(line + "\r\n");
+                                break;
+                        }
+                    }
+                }
+                if (EaglePatch.IsChecked == true)
+                {
+                    if (System.IO.File.Exists(App.path + @"\dinput8.dll.disabled"))
+                    {
+                        System.IO.File.Move(App.path + @"\dinput8.dll.disabled", App.path + @"\dinput8.dll");
+                    }
+                }
+                else
+                {
+                    if (System.IO.File.Exists(App.path + @"\dinput8.dll"))
+                    {
+                        System.IO.File.Move(App.path + @"\dinput8.dll", App.path + @"\dinput8.dll.disabled");
+                    }
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
         // Events
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
@@ -428,10 +498,10 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
         {
             try
             {
-                await SaveUserAddeduMods();
                 await SaveGameSettings();
-                await SaveuModSettings();
                 await SaveReShade();
+                await SaveuModStatus();
+                await SaveEaglePatchSettings();
                 await Task.Delay(10);
                 System.Windows.MessageBox.Show("Changes are saved");
             }
@@ -439,29 +509,6 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             {
                 System.Windows.MessageBox.Show(ex.Message);
                 return;
-            }
-        }
-
-        // Opens Custom uMods folder
-        private async void AddCustomuMods_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ProcessStartInfo processInfo = new ProcessStartInfo
-                {
-                    FileName = "explorer.exe",
-                    Arguments = path + @"Mods\Custom uMods\",
-                    UseShellExecute = false
-                };
-                Process.Start(processInfo);
-                System.Windows.MessageBox.Show("Drag all of the .tpf files in the open directory and then press OK.");
-                await Task.Delay(10);
-                await SaveUserAddeduMods();
-                await SaveuModSettings();
-            }
-            catch (Exception ex)
-            {
-                System.Windows.MessageBox.Show(ex.Message);
             }
         }
     }

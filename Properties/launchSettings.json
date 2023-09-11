@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Assassins Creed Remastered Launcher": {
+      "commandName": "Project",
+      "commandLineArgs": "--console"
+    }
+  }
+}

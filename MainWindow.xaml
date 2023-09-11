@@ -14,7 +14,7 @@
                         <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="10"
+                            CornerRadius="10,0,10,0"
                             Margin="{TemplateBinding Margin}">
                             <ContentPresenter />
                         </Border>
@@ -56,6 +56,7 @@
                     </ControlTemplate>
                 </Button.Template>
             </Button>
+            
             <!--Back-->
             <Button x:Name="Back" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Back_Click">
                 <Button.Content>
@@ -80,7 +81,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/Play.png" Stretch="UniformToFill"/>
-                            <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                         </StackPanel>
                     </Button.Content>
                     <Button.Template>
@@ -99,7 +100,26 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/Credits.png" Stretch="UniformToFill"/>
-                            <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <!--uMod-->
+                <Button x:Name="uMod" HorizontalAlignment="Center" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,-0.248" BorderThickness="4,0,0,0" Background="{x:Null}" BorderBrush="{x:Null}" Margin="10,10,10,10" Cursor="Hand" Click="uMod_Click">
+                    <Button.Content>
+                        <StackPanel>
+                            <Image Source="/Assets/Icons/Mods.png" Stretch="UniformToFill"/>
+                            <TextBlock Text="uMod Mods" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" FontSize="16" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
                     <Button.Template>
@@ -118,7 +138,7 @@
                     <Button.Content>
                         <StackPanel>
                             <Image Source="/Assets/Icons/Settings.png" Stretch="UniformToFill"/>
-                            <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                         </StackPanel>
                     </Button.Content>
                     <Button.Template>
@@ -137,7 +157,7 @@
                 <Button.Content>
                     <StackPanel>
                         <Image Source="/Assets/Icons/Update.png" Stretch="UniformToFill"/>
-                        <TextBlock Text="Update" FontSize="16" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Update" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                     </StackPanel>
                 </Button.Content>
                 <Button.Template>

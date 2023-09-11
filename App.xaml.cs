@@ -6,6 +6,7 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -21,17 +22,35 @@ namespace Assassins_Creed_Remastered_Launcher
         private Stopwatch stopwatch = new Stopwatch();
         private Timer timer;
         private string timeElapsed;
-        private string path = "";
+        public static string path { get; set; }
+        public static bool uModStatus { get; set; }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        [DllImport("Kernel32")]
+        public static extern void AllocConsole();
+
+        [DllImport("Kernel32")]
+        public static extern void FreeConsole();
+
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
             foreach (var s in e.Args)
             {
-                if (s == "--skiplauncher")
+                switch (s)
                 {
-                    GetDirectory();
-                    IdleRichPresence();
-                    StartGame();
+                    case "--skiplauncher":
+                        FreeConsole();
+                        GetDirectory();
+                        await GetuModStatus();
+                        IdleRichPresence();
+                        StartGame();
+                        break;
+                    case "--console":
+                        AllocConsole();
+                        GetDirectory();
+                        await GetuModStatus();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
@@ -53,28 +72,80 @@ namespace Assassins_Creed_Remastered_Launcher
                 return;
             }
         }
+
+        //
+        private async Task GetuModStatus()
+        {
+            try
+            {
+                if (System.IO.File.Exists(path + @"\uMod\Status.txt"))
+                {
+                    string[] statusFile = File.ReadAllLines(path + @"\uMod\Status.txt");
+                    foreach (string line in statusFile)
+                    {
+                        if (line.StartsWith("Enabled"))
+                        {
+                            string[] splitLine = line.Split("=");
+                            if (int.Parse(splitLine[1]) == 1)
+                            {
+                                uModStatus = true;
+                            }
+                            else
+                            {
+                                uModStatus = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         private async void StartGame()
         {
             try
             {
-                Process uMod = new Process();
-                Process Game = new Process();
-                uMod.StartInfo.WorkingDirectory = path + @"\uMod";
-                uMod.StartInfo.FileName = "uMod.exe";
-                uMod.StartInfo.UseShellExecute = true;
-                Game.StartInfo.WorkingDirectory = path;
-                Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
-                Game.StartInfo.UseShellExecute = true;
-                uMod.Start();
-                Game.Start();
-                InGameRichPresence();
-                Game.WaitForExit();
-                uMod.CloseMainWindow();
-                IdleRichPresence();
-                stopwatch.Stop();
-                stopwatch.Reset();
-                await Task.Delay(10);
-                Environment.Exit(0);
+                if (uModStatus)
+                {
+                    Process uMod = new Process();
+                    Process Game = new Process();
+                    uMod.StartInfo.WorkingDirectory = path + @"\uMod";
+                    uMod.StartInfo.FileName = "uMod.exe";
+                    uMod.StartInfo.UseShellExecute = true;
+                    Game.StartInfo.WorkingDirectory = path;
+                    Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                    Game.StartInfo.UseShellExecute = true;
+                    uMod.Start();
+                    Game.Start();
+                    InGameRichPresence();
+                    Game.WaitForExit();
+                    uMod.CloseMainWindow();
+                    IdleRichPresence();
+                    stopwatch.Stop();
+                    stopwatch.Reset();
+                    await Task.Delay(10);
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    Process Game = new Process();
+                    Game.StartInfo.WorkingDirectory = path;
+                    Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
+                    Game.StartInfo.UseShellExecute = true;
+                    Game.Start();
+                    InGameRichPresence();
+                    Game.WaitForExit();
+                    IdleRichPresence();
+                    stopwatch.Stop();
+                    stopwatch.Reset();
+                    await Task.Delay(1);
+                    Environment.Exit(0);
+                }
             }
             catch (Exception ex)
             {
@@ -86,7 +157,7 @@ namespace Assassins_Creed_Remastered_Launcher
         // Discord Rich Presence when in Launcher
         private void IdleRichPresence()
         {
-            client = new DiscordRpcClient("");
+            client = new DiscordRpcClient("1133864004549361686");
             client.Initialize();
             client.SetPresence(new RichPresence()
             {

@@ -11,6 +11,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Icons\Add.png" />
+    <None Remove="Assets\Icons\Down (Light).png" />
+    <None Remove="Assets\Icons\Down.png" />
+    <None Remove="Assets\Icons\Mods.png" />
+    <None Remove="Assets\Icons\Ok.png" />
+    <None Remove="Assets\Icons\Remove.png" />
+    <None Remove="Assets\Icons\Up (Light).png" />
+    <None Remove="Assets\Icons\Up.png" />
     <None Remove="Back.png" />
     <None Remove="Credits.png" />
     <None Remove="Exit.png" />
@@ -49,11 +57,19 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\Icons\Add.png" />
     <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
+    <Resource Include="Assets\Icons\Down %28Light%29.png" />
+    <Resource Include="Assets\Icons\Down.png" />
     <Resource Include="Assets\Icons\Exit.png" />
+    <Resource Include="Assets\Icons\Mods.png" />
+    <Resource Include="Assets\Icons\Ok.png" />
     <Resource Include="Assets\Icons\Play.png" />
+    <Resource Include="Assets\Icons\Remove.png" />
     <Resource Include="Assets\Icons\Settings.png" />
+    <Resource Include="Assets\Icons\Up %28Light%29.png" />
+    <Resource Include="Assets\Icons\Up.png" />
     <Resource Include="Assets\Icons\Update.png" />
     <Resource Include="Assets\background.png" />
   </ItemGroup>
