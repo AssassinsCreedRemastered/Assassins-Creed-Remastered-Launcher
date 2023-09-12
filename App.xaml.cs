@@ -18,11 +18,11 @@ namespace Assassins_Creed_Remastered_Launcher
     /// </summary>
     public partial class App : Application
     {
-        private DiscordRpcClient client;
+        private DiscordRpcClient? client;
         private Stopwatch stopwatch = new Stopwatch();
-        private Timer timer;
-        private string timeElapsed;
-        public static string path { get; set; }
+        private Timer? timer;
+        private string? timeElapsed;
+        public static string? path { get; set; }
         public static bool uModStatus { get; set; }
 
         [DllImport("Kernel32")]
@@ -33,30 +33,41 @@ namespace Assassins_Creed_Remastered_Launcher
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
-            foreach (var s in e.Args)
+            if (e.Args.Length > 0)
             {
-                switch (s)
+                foreach (var s in e.Args)
                 {
-                    case "--skiplauncher":
-                        FreeConsole();
-                        GetDirectory();
-                        await GetuModStatus();
-                        IdleRichPresence();
-                        StartGame();
-                        break;
-                    case "--console":
-                        AllocConsole();
-                        GetDirectory();
-                        await GetuModStatus();
-                        break;
-                    default:
-                        break;
+                    switch (s)
+                    {
+                        case "--skiplauncher":
+                            FreeConsole();
+                            await GetDirectory();
+                            await GetuModStatus();
+                            IdleRichPresence();
+                            StartGame();
+                            break;
+                        case "--console":
+                            AllocConsole();
+                            await GetDirectory();
+                            await GetuModStatus();
+                            IdleRichPresence();
+                            break;
+                        default:
+                            break;
+                    }
                 }
+            }
+            else
+            {
+                FreeConsole();
+                await GetDirectory();
+                await GetuModStatus();
+                IdleRichPresence();
             }
         }
         // Functions
         // Grabbing path where AC is installed
-        private async void GetDirectory()
+        private async Task GetDirectory()
         {
             try
             {
@@ -190,6 +201,7 @@ namespace Assassins_Creed_Remastered_Launcher
             try
             {
                 timeElapsedUpdate();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 client.SetPresence(new RichPresence()
                 {
                     State = "Playing for " + timeElapsed,
@@ -204,6 +216,7 @@ namespace Assassins_Creed_Remastered_Launcher
                     timer.Interval = 60000;
                 }
             }
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

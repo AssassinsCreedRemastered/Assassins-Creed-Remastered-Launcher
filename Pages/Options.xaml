@@ -84,9 +84,9 @@
         </Grid>
         <ScrollViewer Grid.ColumnSpan="2" Grid.RowSpan="2" Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
             <StackPanel>
-                <TextBlock Margin="0,10,0,10" FontSize="36" Text="Game Settings" Foreground="White" HorizontalAlignment="Center"/>
+                <TextBlock Margin="0,10,0,10" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Text="Game Settings" Foreground="White" HorizontalAlignment="Center"/>
                 <!--Save Settings-->
-                <Button x:Name="Save" Grid.Column="1" Margin="0,0,0,10" Content="Save Settings" FontSize="24" Background="#7FD0D0D0" Foreground="White" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Click="Save_Click"/>
+                <Button x:Name="Save" Grid.Column="1" Margin="0,0,0,10" Content="Save Settings" FontSize="24" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Background="#7FD0D0D0" Foreground="White" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Click="Save_Click"/>
                 <!--Resolution-->
                 <Border BorderBrush="White" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
                     <Grid Height="50" Background="#80585858">
@@ -94,8 +94,8 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Resolution" FontSize="36" Foreground="White" HorizontalAlignment="Center"/>
-                        <ComboBox x:Name="ResolutionsList" Grid.Column="1" Width="Auto" Margin="110,10,50,10" FontSize="18" HorizontalContentAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Text="Resolution" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="ResolutionsList" Grid.Column="1" Width="Auto" Margin="110,10,50,10" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center"/>
                     </Grid>
                 </Border>
                 <!--Vertical Sync-->
@@ -105,8 +105,8 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Vertical Sync" HorizontalAlignment="Center" FontSize="36" Foreground="White"/>
-                        <CheckBox x:Name="VSync" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <TextBlock Grid.Column="0" Text="Vertical Sync" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
+                        <CheckBox x:Name="VSync" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
                 <!--AntiAliasing-->
@@ -116,8 +116,8 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Anti-aliasing" HorizontalAlignment="Center" FontSize="36" Foreground="White"/>
-                        <ComboBox x:Name="AntiAliasing" Grid.Column="1" Margin="110,10,50,10" Width="Auto" FontSize="18" HorizontalContentAlignment="Center">
+                        <TextBlock Grid.Column="0" Text="Anti-aliasing" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
+                        <ComboBox x:Name="AntiAliasing" Grid.Column="1" Margin="110,10,50,10" Width="Auto" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center">
                             <ComboBox.Items>
                                 <ComboBoxItem Content="Off"/>
                                 <ComboBoxItem Content="2xAA"/>
@@ -126,7 +126,7 @@
                         </ComboBox>
                     </Grid>
                 </Border>
-                <TextBlock Margin="0,10,0,10" FontSize="36" Text="Mod Settings" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Margin="0,10,0,10" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Text="Mod Settings" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <!--uMod-->
                 <Border BorderBrush="White" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
                     <Grid Height="50" Background="#80585858">
@@ -134,8 +134,8 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="uMod" HorizontalAlignment="Center" FontSize="36" Foreground="White"/>
-                        <CheckBox x:Name="uMod" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <TextBlock Grid.Column="0" Text="uMod" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
+                        <CheckBox x:Name="uMod" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
                 <!--ReShade-->
@@ -145,8 +145,8 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="ReShade" HorizontalAlignment="Center" FontSize="36" Foreground="White"/>
-                        <CheckBox x:Name="ReShade" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <TextBlock Grid.Column="0" Text="ReShade" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
+                        <CheckBox x:Name="ReShade" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
                 <!--EaglePatch-->
@@ -156,11 +156,11 @@
                             <ColumnDefinition Width="340"/>
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="EaglePatch" HorizontalAlignment="Center" FontSize="36" Foreground="White"/>
-                        <CheckBox x:Name="EaglePatch" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <TextBlock Grid.Column="0" Text="EaglePatch" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
+                        <CheckBox x:Name="EaglePatch" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
-                <TextBlock Margin="0,10,0,10" FontSize="36" Text="EaglePatch Settings" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Margin="0,10,0,10" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Text="EaglePatch Settings" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <!--Keyboard Layout Selector-->
                 <Border BorderBrush="White" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
                     <Grid Height="50" Background="#80585858">
@@ -188,7 +188,7 @@
                                 <ToolTip Content="Swap triggers to bumpers and bumpers to triggers (e.g. R1 becomes run button)"/>
                             </TextBlock.ToolTip>
                         </TextBlock>
-                        <CheckBox x:Name="PS3Controls" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <CheckBox x:Name="PS3Controls" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
                 <Border BorderBrush="White" BorderThickness="1.5" Margin="5,2,5,2" CornerRadius="5">
@@ -202,7 +202,7 @@
                                 <ToolTip Content="Skip videos on game's launch"/>
                             </TextBlock.ToolTip>
                         </TextBlock>
-                        <CheckBox x:Name="SkipIntroVideos" Grid.Column="1" Margin="160,10,100,10" Style="{StaticResource OnOffCheckboxStyle}"/>
+                        <CheckBox x:Name="SkipIntroVideos" Grid.Column="1" Margin="160,10,100,10" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Style="{StaticResource OnOffCheckboxStyle}"/>
                     </Grid>
                 </Border>
             </StackPanel>

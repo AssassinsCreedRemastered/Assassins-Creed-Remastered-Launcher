@@ -165,6 +165,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     MessageBoxResult result = MessageBox.Show("Do you want to delete mod files?", "Confirmation", MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                     {
+#pragma warning disable CS8604 // Possible null reference argument.
                         await RemoveMod(System.IO.Path.GetFileName(System.IO.Path.GetDirectoryName(InstalledEnabledMods[EnabledModsList.SelectedItem.ToString()])), InstalledEnabledMods[EnabledModsList.SelectedItem.ToString()]);
                     }
                     InstalledEnabledMods.Remove(EnabledModsList.SelectedItem.ToString());

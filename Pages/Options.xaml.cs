@@ -81,7 +81,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 }
                 using (StreamReader sr = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Assassins_Creed_Remastered_Launcher.ListofSupportedResolutions.txt")))
                 {
-                    string line = sr.ReadLine();
+                    string? line = sr.ReadLine();
                     while (line != null)
                     {
                         string[] splitLine = line.Split('x');
@@ -310,7 +310,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 {
                     using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini"))
                     {
-                        string line = sr.ReadLine();
+                        string? line = sr.ReadLine();
                         while (line != null)
                         {
                             switch (line)
@@ -413,6 +413,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         sw.Write("Enabled=0");
                     }
                 }
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {

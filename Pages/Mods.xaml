@@ -158,12 +158,12 @@
                     </Button>
                 </Grid>
             </Border>
-            <TextBlock Grid.Row="1" Text="Enabled Mods" FontSize="36" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2,0,0" Foreground="White"/>
+            <TextBlock Grid.Row="1" Text="Enabled Mods" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,6,0,0" Foreground="White"/>
             
             <!--Enabled Mods-->
             <Border Grid.Row="2" BorderBrush="White" BorderThickness="1.5" Margin="5,0,5,0" CornerRadius="5">
                 <ScrollViewer Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
-                    <ListBox x:Name="EnabledModsList" Background="Transparent" Foreground="White" AllowDrop="True" BorderBrush="Transparent" SelectionChanged="EnabledModsList_SelectionChanged">
+                    <ListBox x:Name="EnabledModsList" Background="Transparent" Foreground="White" AllowDrop="True" BorderBrush="Transparent" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" SelectionChanged="EnabledModsList_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
@@ -248,12 +248,12 @@
                 </Grid>
             </Border>
 
-            <TextBlock Grid.Row="4" Text="Disabled Mods" FontSize="36" Foreground="White" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,2,0,0"/>
+            <TextBlock Grid.Row="4" Text="Disabled Mods" FontSize="36" Foreground="White" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,6,0,0"/>
             
             <!--Disabled Mods-->
             <Border Grid.Row="5" BorderBrush="White" BorderThickness="1.5" Margin="5,5,5,5" CornerRadius="5">
                 <ScrollViewer Style="{StaticResource NoScrollViewerStyle}" VerticalScrollBarVisibility="Auto">
-                    <ListBox x:Name="DisabledModsList" Background="Transparent" Foreground="White"  AllowDrop="True" BorderBrush="Transparent" SelectionChanged="DisabledModsList_SelectionChanged">
+                    <ListBox x:Name="DisabledModsList" Background="Transparent" Foreground="White"  AllowDrop="True" BorderBrush="Transparent" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" SelectionChanged="DisabledModsList_SelectionChanged">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding}"/>
