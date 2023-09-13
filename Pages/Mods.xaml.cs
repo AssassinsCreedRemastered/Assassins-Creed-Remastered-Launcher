@@ -39,6 +39,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             EnabledModsList.ItemsSource = EnabledMods;
             DisabledModsList.ItemsSource = DisabledMods;
             ReaduModConfig();
+            GC.Collect();
         }
 
         // Grabs all of the uMod mods inside of Mods folder and reads uMod configuration file
@@ -80,6 +81,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     DisabledMods.Add(mod);
                     InstalledDisabledMods.Add(mod, InstalledMods[mod]);
                 }
+                GC.Collect();
             }
             catch (Exception ex)
             {
@@ -105,8 +107,9 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         }
                     }
                 }
-                MessageBox.Show("Saving done.");
+                GC.Collect();
                 await Task.Delay(1);
+                MessageBox.Show("Saving done.");
             }
             catch (Exception ex)
             {
@@ -121,31 +124,41 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             {
                 OpenFileDialog FileDialog = new OpenFileDialog();
                 FileDialog.Filter = "uMod File|*.tpf";
+                FileDialog.Multiselect = true;
                 FileDialog.Title = "Select .tpf uMod Mod for Assassin's Creed";
-                string modPath;
+                List<string> modPaths = new List<string>();
                 if (FileDialog.ShowDialog() == true)
                 {
-                    modPath = FileDialog.FileName;
+                    string[] tempPaths = FileDialog.FileNames;
+                    foreach (string path in tempPaths)
+                    {
+                        modPaths.Add(path);
+                    }
                 }
                 else
                 {
                     MessageBox.Show("Installation Cancelled");
                     return;
                 }
-                if (System.IO.File.Exists(modPath))
+                foreach (string modPath in modPaths)
                 {
-                    if (!System.IO.File.Exists(App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}"))
+                    Console.WriteLine(modPath);
+                    if (System.IO.File.Exists(modPath))
                     {
-                        System.IO.File.Move(modPath, App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
-                        EnabledMods.Add(System.IO.Path.GetFileName(modPath));
-                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
-                    }
-                    else
-                    {
-                        EnabledMods.Add(System.IO.Path.GetFileName(modPath));
-                        InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
+                        if (!System.IO.File.Exists(App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}"))
+                        {
+                            System.IO.File.Move(modPath, App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
+                            EnabledMods.Add(System.IO.Path.GetFileName(modPath));
+                            InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
+                        }
+                        else
+                        {
+                            EnabledMods.Add(System.IO.Path.GetFileName(modPath));
+                            InstalledEnabledMods.Add(System.IO.Path.GetFileName(modPath), App.path + $@"\Mods\Custom uMods\{System.IO.Path.GetFileName(modPath)}");
+                        }
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -181,6 +194,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     InstalledDisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                     DisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -210,6 +224,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         }
                         break;
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -245,6 +260,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         DisabledModsList.SelectedIndex = selectedIndex - 1;
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -281,6 +297,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         DisabledModsList.SelectedIndex = selectedIndex + 1;
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -323,6 +340,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     InstalledDisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                     DisabledMods.Remove(DisabledModsList.SelectedItem.ToString());
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -344,6 +362,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     InstalledEnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
                     EnabledMods.Remove(EnabledModsList.SelectedItem.ToString());
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)

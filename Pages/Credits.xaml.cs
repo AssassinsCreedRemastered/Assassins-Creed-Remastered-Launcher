@@ -80,6 +80,15 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             });
         }
 
+        private void Icons8_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://icons8.com/",
+                UseShellExecute = true,
+            });
+        }
+
         private void Icon_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(new ProcessStartInfo

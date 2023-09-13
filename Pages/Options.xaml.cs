@@ -42,6 +42,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             KeyboardLayoutSelector.Items.Add("KeyboardMouse5");
             KeyboardLayoutSelector.Items.Add("Keyboard");
             KeyboardLayoutSelector.Items.Add("KeyboardAlt");
+            GC.Collect();
         }
 
         // Get Path where AC installation is
@@ -53,7 +54,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 {
                     path = sr.ReadLine() + @"\";
                 }
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -108,7 +110,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         line = sr.ReadLine();
                     };
                 };
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -133,7 +136,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     uMod.IsChecked = false;
                 }
                 await CheckEaglePatch();
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -200,7 +204,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         ResolutionsList.SelectedIndex = ResolutionsList.Items.Count - 1;
                     }
                 }
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -222,7 +227,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 {
                     ReShade.IsChecked = false;
                 }
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -241,6 +247,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                     EaglePatch.IsChecked = true;
                 }
                 await ReadEaglePatchConfig();
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -358,7 +365,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 }
                 File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
                 File.Move(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\AssassinTemp.ini", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Assassin.ini");
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -388,7 +396,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         File.Move(path + @"dxgi.dll", path + @"dxgi.dll.disabled");
                     }
                 }
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -413,6 +422,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         sw.Write("Enabled=0");
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -477,6 +487,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                         System.IO.File.Move(App.path + @"\dinput8.dll", App.path + @"\dinput8.dll.disabled");
                     }
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -492,6 +503,7 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             GetDirectory();
             await FindSupportedResolutions();
             await ReadConfigFiles();
+            GC.Collect();
         }
 
         // Save Settings
@@ -503,7 +515,8 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
                 await SaveReShade();
                 await SaveuModStatus();
                 await SaveEaglePatchSettings();
-                await Task.Delay(10);
+                GC.Collect();
+                await Task.Delay(1);
                 System.Windows.MessageBox.Show("Changes are saved");
             }
             catch (Exception ex)

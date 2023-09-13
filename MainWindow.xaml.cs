@@ -21,6 +21,7 @@ using File = System.IO.File;
 using DiscordRPC;
 using System.Windows.Threading;
 using System.Timers;
+using Microsoft.VisualBasic.Logging;
 
 namespace Assassins_Creed_Remastered_Launcher
 {
@@ -45,6 +46,9 @@ namespace Assassins_Creed_Remastered_Launcher
         // Global
         private string path = "";
 
+        // Cache for all of the pages
+        private Dictionary<string, Page> pageCache = new Dictionary<string, Page>();
+
         // Functions
         // Grabbing path where AC is installed
         private async void GetDirectory()
@@ -59,6 +63,7 @@ namespace Assassins_Creed_Remastered_Launcher
                 {
                     Directory.CreateDirectory(path + @"\Mods\Custom uMods\");
                 }
+                GC.Collect();
                 await Task.Delay(10);
             }
             catch (Exception ex)
@@ -139,7 +144,75 @@ namespace Assassins_Creed_Remastered_Launcher
             {
                 timeElapsed = stopwatch.Elapsed.Minutes + " minutes";
             }
+        }
 
+        // Used to change pages and cache them
+        private async Task NavigateToPage(string PageName)
+        {
+            Console.WriteLine($"Trying to navigate to {PageName}");
+            switch (PageName)
+            {
+                case "Credits":
+
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+
+                        Console.WriteLine("Page is not cached. Loading it and caching it for future use.");
+                        Pages.Credits page = new Pages.Credits();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    else
+                    {
+                        Console.WriteLine("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+                case "Options":
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Console.WriteLine("Page is not cached. Loading it and caching it for future use.");
+                        Pages.Options page = new Pages.Options();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+                case "Mods":
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Console.WriteLine("Page is not cached. Loading it and caching it for future use.");
+                        Pages.Mods page = new Pages.Mods();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+                default:
+                    if (!pageCache.ContainsKey(PageName))
+                    {
+                        Console.WriteLine("Page is not cached. Loading it and caching it for future use.");
+                        Pages.Default page = new Pages.Default();
+                        pageCache[PageName] = page;
+                        PageViewer.Content = page;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Page is already cached. Loading it");
+                        PageViewer.Content = pageCache[PageName];
+                    }
+                    break;
+            }
+            GC.Collect();
+            await Task.Delay(1);
         }
 
         // Events
@@ -158,16 +231,8 @@ namespace Assassins_Creed_Remastered_Launcher
             stopwatch.Stop();
             stopwatch.Reset();
             client.Dispose();
+            GC.Collect();
             Environment.Exit(0);
-        }
-
-        // Go back 1 page in Frame when this button is clicked
-        private void Back_Click(object sender, RoutedEventArgs e)
-        {
-            if (PageViewer.NavigationService.CanGoBack)
-            {
-                PageViewer.GoBack();
-            }
         }
 
         // Opens uMod and the Game and then waits for Game to be closed and then closes the uMod
@@ -208,6 +273,7 @@ namespace Assassins_Creed_Remastered_Launcher
                     stopwatch.Stop();
                     stopwatch.Reset();
                 }
+                GC.Collect();
                 await Task.Delay(1);
             }
             catch (Exception ex)
@@ -217,17 +283,45 @@ namespace Assassins_Creed_Remastered_Launcher
             };
         }
 
-        private void Credits_Click(object sender, RoutedEventArgs e)
+        // Donate button
+        private async void Donate_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Navigate(new Uri("Pages/Credits.xaml", UriKind.Relative));
+            try
+            {
+                MessageBox.Show("Donations are and will always be optional.\nEverything made by me on my own in my spare time will always be free and fully open source.\nDon't donate unless you can really afford it and don't donate your parents money without them knowing.\nDonations are NOT refundable.");
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = "https://ko-fi.com/shazzaam/",
+                    UseShellExecute = true,
+                });
+                GC.Collect();
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                MessageBox.Show(ex.Message);
+                return;
+            }
         }
 
-        private void Options_Click(object sender, RoutedEventArgs e)
+        private async void Credits_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Navigate(new Uri("Pages/Options.xaml", UriKind.Relative));
+            await NavigateToPage("Credits");
+            GC.Collect();
+            await Task.Delay(1);
+            //PageViewer.Navigate(new Uri("Pages/Credits.xaml", UriKind.Relative));
         }
 
-        private void Update_Click(object sender, RoutedEventArgs e)
+        private async void Options_Click(object sender, RoutedEventArgs e)
+        {
+            await NavigateToPage("Options");
+            GC.Collect();
+            await Task.Delay(1);
+            //PageViewer.Navigate(new Uri("Pages/Options.xaml", UriKind.Relative));
+        }
+
+        private async void Update_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -266,6 +360,9 @@ namespace Assassins_Creed_Remastered_Launcher
                 if (currentVersion == newestVersion)
                 {
                     MessageBox.Show("Newest version is installed.");
+                    GC.Collect();
+                    await Task.Delay(1);
+                    return;
                 } else
                 {
                     MessageBoxResult result = MessageBox.Show("New version of the launcher found. Do you want to update?", "Confirmation", MessageBoxButton.YesNo);
@@ -279,9 +376,13 @@ namespace Assassins_Creed_Remastered_Launcher
                         Environment.Exit(0);
                     } else
                     {
+                        GC.Collect();
+                        await Task.Delay(1);
                         return;
                     }
                 }
+                GC.Collect();
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
@@ -290,9 +391,12 @@ namespace Assassins_Creed_Remastered_Launcher
             }
         }
 
-        private void uMod_Click(object sender, RoutedEventArgs e)
+        private async void uMod_Click(object sender, RoutedEventArgs e)
         {
-            PageViewer.Navigate(new Uri("Pages/Mods.xaml", UriKind.Relative));
+            await NavigateToPage("Mods");
+            GC.Collect();
+            await Task.Delay(1);
+            //PageViewer.Navigate(new Uri("Pages/Mods.xaml", UriKind.Relative));
         }
     }
 }

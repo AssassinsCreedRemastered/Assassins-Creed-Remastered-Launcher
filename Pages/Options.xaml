@@ -95,7 +95,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Resolution" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        <ComboBox x:Name="ResolutionsList" Grid.Column="1" Width="Auto" Margin="110,10,50,10" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center"/>
+                        <ComboBox x:Name="ResolutionsList" Grid.Column="1" Width="Auto" Margin="110,10,50,10" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                     </Grid>
                 </Border>
                 <!--Vertical Sync-->
@@ -117,7 +117,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Anti-aliasing" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="36" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" Foreground="White"/>
-                        <ComboBox x:Name="AntiAliasing" Grid.Column="1" Margin="110,10,50,10" Width="Auto" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center">
+                        <ComboBox x:Name="AntiAliasing" Grid.Column="1" Margin="110,10,50,10" Width="Auto" FontSize="18" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center">
                             <ComboBox.Items>
                                 <ComboBoxItem Content="Off"/>
                                 <ComboBoxItem Content="2xAA"/>
@@ -173,7 +173,7 @@
                                 <ToolTip Content="With EaglePatch enabled, this is the only way of changing the layout because in game it doesn't work anymore"/>
                             </TextBlock.ToolTip>
                         </TextBlock>
-                        <ComboBox x:Name="KeyboardLayoutSelector" Grid.Column="1" Width="Auto" Margin="100,10,40,10" FontSize="18" HorizontalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
+                        <ComboBox x:Name="KeyboardLayoutSelector" Grid.Column="1" Width="Auto" Margin="100,10,40,10" FontSize="18" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="Bahnschrift SemiBold"/>
                     </Grid>
                 </Border>
                 <!--PS3 Controls-->

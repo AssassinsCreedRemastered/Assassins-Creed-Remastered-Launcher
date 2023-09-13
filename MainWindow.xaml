@@ -41,10 +41,15 @@
             
             <!--First row that contains Exit and Back buttons-->
             <!--Exit-->
-            <Button x:Name="Exit" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Exit_Click">
+            <Button x:Name="Exit" Grid.Column="1" Margin="0,0,10,0" HorizontalAlignment="Right" VerticalAlignment="Center" BorderThickness="0,0,0,0" Background="{x:Null}" Height="36" Width="36" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Exit_Click">
                 <Button.Content>
                     <Image Source="/Assets/Icons/Exit.png" Stretch="UniformToFill"/>
                 </Button.Content>
+                <Button.ToolTip>
+                    <ToolTip>
+                        Exits the application
+                    </ToolTip>
+                </Button.ToolTip>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
@@ -57,11 +62,16 @@
                 </Button.Template>
             </Button>
             
-            <!--Back-->
-            <Button x:Name="Back" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="30" Width="30" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Back_Click">
+            <!--Ko-Fi Donate Button-->
+            <Button x:Name="Donate" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,-0.248" BorderThickness="0,0,0,0" Background="{x:Null}" Height="36" Width="36" BorderBrush="{x:Null}" IsCancel="True" Cursor="Hand" Click="Donate_Click">
                 <Button.Content>
-                    <Image Source="/Assets/Icons/Back.png"/>
+                    <Image Source="/Assets/Icons/ko-fi.png"/>
                 </Button.Content>
+                <Button.ToolTip>
+                    <ToolTip>
+                        Opens a Ko-Fi page for donating
+                    </ToolTip>
+                </Button.ToolTip>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
@@ -84,6 +94,11 @@
                             <TextBlock Text="Play" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                         </StackPanel>
                     </Button.Content>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            Launches the game and uMod if it's enabled
+                        </ToolTip>
+                    </Button.ToolTip>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}"
@@ -103,6 +118,11 @@
                             <TextBlock Text="Credits" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                         </StackPanel>
                     </Button.Content>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            Opens a Credits page where all of other authors are mentioned
+                        </ToolTip>
+                    </Button.ToolTip>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}"
@@ -122,6 +142,11 @@
                             <TextBlock Text="uMod Mods" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold" FontSize="16" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </Button.Content>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            Opens uMod Mods page where you can add orremove or enable or disable mods
+                        </ToolTip>
+                    </Button.ToolTip>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}"
@@ -141,6 +166,11 @@
                             <TextBlock Text="Options" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                         </StackPanel>
                     </Button.Content>
+                    <Button.ToolTip>
+                        <ToolTip>
+                            Opens an Options page where you can change some in game settings alongside some mod settings
+                        </ToolTip>
+                    </Button.ToolTip>
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
                             <Border Background="{TemplateBinding Background}"
@@ -160,6 +190,11 @@
                         <TextBlock Text="Update" FontSize="16" HorizontalAlignment="Center" TextWrapping="Wrap" TextTrimming="WordEllipsis" FontWeight="Bold" FontFamily="Bahnschrift SemiBold"/>
                     </StackPanel>
                 </Button.Content>
+                <Button.ToolTip>
+                    <ToolTip>
+                        Checks for updates
+                    </ToolTip>
+                </Button.ToolTip>
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"

@@ -14,6 +14,7 @@
     <None Remove="Assets\Icons\Add.png" />
     <None Remove="Assets\Icons\Down (Light).png" />
     <None Remove="Assets\Icons\Down.png" />
+    <None Remove="Assets\Icons\ko-fi.png" />
     <None Remove="Assets\Icons\Mods.png" />
     <None Remove="Assets\Icons\Ok.png" />
     <None Remove="Assets\Icons\Remove.png" />
@@ -58,11 +59,11 @@
 
   <ItemGroup>
     <Resource Include="Assets\Icons\Add.png" />
-    <Resource Include="Assets\Icons\Back.png" />
     <Resource Include="Assets\Icons\Credits.png" />
     <Resource Include="Assets\Icons\Down %28Light%29.png" />
     <Resource Include="Assets\Icons\Down.png" />
     <Resource Include="Assets\Icons\Exit.png" />
+    <Resource Include="Assets\Icons\ko-fi.png" />
     <Resource Include="Assets\Icons\Mods.png" />
     <Resource Include="Assets\Icons\Ok.png" />
     <Resource Include="Assets\Icons\Play.png" />
