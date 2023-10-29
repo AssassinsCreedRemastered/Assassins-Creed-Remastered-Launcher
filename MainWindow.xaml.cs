@@ -252,6 +252,10 @@ namespace Assassins_Creed_Remastered_Launcher
                     Game.StartInfo.UseShellExecute = true;
                     uMod.Start();
                     Game.Start();
+                    Game.ProcessorAffinity = new IntPtr(0xFF);
+                    Game.WaitForExit();
+                    await Task.Delay(500);
+                    uMod.CloseMainWindow();
                     InGameRichPresence();
                     Game.WaitForExit();
                     await Task.Delay(500);
@@ -267,6 +271,7 @@ namespace Assassins_Creed_Remastered_Launcher
                     Game.StartInfo.FileName = "AssassinsCreed_Dx9.exe";
                     Game.StartInfo.UseShellExecute = true;
                     Game.Start();
+                    Game.ProcessorAffinity = new IntPtr(0xFF);
                     InGameRichPresence();
                     Game.WaitForExit();
                     IdleRichPresence();

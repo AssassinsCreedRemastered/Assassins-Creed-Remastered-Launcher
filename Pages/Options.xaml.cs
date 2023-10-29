@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using System.Windows.Forms;
 using System.Diagnostics;
 using Microsoft.VisualBasic.Logging;
+using System.Security.Principal;
 
 namespace Assassins_Creed_Remastered_Launcher.Pages
 {
@@ -504,6 +505,33 @@ namespace Assassins_Creed_Remastered_Launcher.Pages
             await FindSupportedResolutions();
             await ReadConfigFiles();
             GC.Collect();
+        }
+
+        // Disabling server calls
+        private void HostsFix_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+                {
+                    string hostsFilePath = System.IO.Path.Combine(Environment.SystemDirectory, "drivers\\etc\\hosts");
+                    using (StreamWriter sw = File.AppendText(hostsFilePath))
+                    {
+                        sw.WriteLine("203.132.26.155 127.0.0.1");
+                    }
+                    System.Windows.MessageBox.Show("Fix has been applied.");
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Run the launcher as Administrator to use this.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show(ex.Message);
+                return;
+            }
         }
 
         // Save Settings
