@@ -1,4 +1,5 @@
 ﻿using DiscordRPC;
+using Microsoft.VisualBasic.Logging;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
+using Microsoft.Win32;
 
 namespace Assassins_Creed_Remastered_Launcher
 {
@@ -71,11 +73,54 @@ namespace Assassins_Creed_Remastered_Launcher
         {
             try
             {
-                using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
-                    path = sr.ReadLine();
+                    await PathMissing();
                 }
-                await Task.Delay(10);
+                else
+                {
+                    using (StreamReader sr = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                    {
+                        path = sr.ReadLine();
+                    }
+                    // Testing to see if the game is still there
+                    if (!System.IO.File.Exists(path + @"\AssassinsCreed_Dx9.exe"))
+                    {
+                        await PathMissing();
+                    }
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        // Path to game folder is missing
+        private async Task PathMissing()
+        {
+            try
+            {
+                Console.WriteLine("Game not found.");
+                System.Windows.MessageBox.Show("Game not found.\nA window will now open asking you to reselect AssassinsCreed_Dx9.exe");
+                OpenFileDialog FileDialog = new OpenFileDialog();
+                FileDialog.Filter = "Executable Files|AssassinsCreed_Dx9.exe";
+                FileDialog.Title = "Select an Assassins Creed Executable";
+                if (FileDialog.ShowDialog() == true)
+                {
+                    path = System.IO.Path.GetDirectoryName(FileDialog.FileName);
+                    using (StreamWriter sw = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
+                    {
+                        sw.WriteLine(path);
+                    };
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+                await Task.Delay(1);
             }
             catch (Exception ex)
             {
