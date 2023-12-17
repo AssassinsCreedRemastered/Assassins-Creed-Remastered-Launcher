@@ -16,7 +16,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using IWshRuntimeLibrary;
 using File = System.IO.File;
 using DiscordRPC;
 using System.Windows.Threading;
