@@ -87,6 +87,7 @@ namespace Assassins_Creed_Remastered_Launcher
                     if (!System.IO.File.Exists(path + @"\AssassinsCreed_Dx9.exe"))
                     {
                         await PathMissing();
+                        await FixuModPaths(); 
                     }
                 }
                 await Task.Delay(1);
@@ -119,6 +120,171 @@ namespace Assassins_Creed_Remastered_Launcher
                 else
                 {
                     Environment.Exit(0);
+                }
+                await Task.Delay(1);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        private async Task FixuModPaths()
+        {
+            try
+            {
+                await uModAppData();
+                await Task.Delay(10);
+                await uModSaveFile();
+                GC.Collect();
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                
+                System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+
+        // Configuration of AppData file for uMod
+        private async Task uModAppData()
+        {
+            try
+            {
+                string AppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+                if (!Directory.Exists(AppData + @"\uMod"))
+                {
+                    Directory.CreateDirectory(AppData + @"\uMod");
+                    string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
+                    char[] array = ExecutableDirectory.ToCharArray();
+                    List<char> charList = new List<char>();
+                    for (int i = 0; i < array.Length; i++)
+                    {
+                        if (i == 0)
+                        {
+                            charList.Add(array[i]);
+                        }
+                        else
+                        {
+                            charList.Add('\0');
+                            charList.Add(array[i]);
+                        }
+                    }
+                    charList.Add('\0');
+                    char[] charArray = charList.ToArray();
+                    string ExecutablePath = new string(charArray);
+                    using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9.txt"))
+                    {
+                        sw.Write(ExecutablePath);
+                    }
+                }
+                else
+                {
+                    if (!System.IO.File.Exists(AppData + @"\uMod\uMod_DX9.txt"))
+                    {
+                        string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
+                        char[] array = ExecutableDirectory.ToCharArray();
+                        List<char> charList = new List<char>();
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                charList.Add(array[i]);
+                            }
+                            else
+                            {
+                                charList.Add('\0');
+                                charList.Add(array[i]);
+                            }
+                        }
+                        charList.Add('\0');
+                        char[] charArray = charList.ToArray();
+                        string ExecutablePath = new string(charArray);
+                        using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9.txt"))
+                        {
+                            sw.Write(ExecutablePath);
+                        }
+                    }
+                    else
+                    {
+                        string ExecutableDirectory = path + @"\AssassinsCreed_Dx9.exe";
+                        char[] array = ExecutableDirectory.ToCharArray();
+                        List<char> charList = new List<char>();
+                        for (int i = 0; i < array.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                charList.Add(array[i]);
+                            }
+                            else
+                            {
+                                charList.Add('\0');
+                                charList.Add(array[i]);
+                            }
+                        }
+                        charList.Add('\0');
+                        char[] charArray = charList.ToArray();
+                        string ExecutablePath = new string(charArray);
+                        using (StreamReader sr = new StreamReader(AppData + @"\uMod\uMod_DX9.txt"))
+                        {
+                            using (StreamWriter sw = new StreamWriter(AppData + @"\uMod\uMod_DX9temp.txt"))
+                            {
+                                string line = sr.ReadLine();
+                                while (line != null)
+                                {
+
+                                    if (line == '\0'.ToString())
+                                    {
+                                        sw.Write(line);
+                                    }
+                                    else
+                                    {
+                                        sw.Write(line + "\n");
+                                    }
+                                    line = sr.ReadLine();
+                                }
+                                sw.Write(ExecutablePath);
+                            }
+                        }
+                        System.IO.File.Delete(AppData + @"\uMod\uMod_DX9.txt");
+                        System.IO.File.Move(AppData + @"\uMod\uMod_DX9temp.txt", AppData + @"\uMod\uMod_DX9.txt");
+                    }
+                }
+                await Task.Delay(10);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
+            }
+        }
+
+        private async Task uModSaveFile()
+        {
+            try
+            {
+                string saveFile = path + @"\AssassinsCreed_Dx9.exe" + "|" + path + @"\uMod\templates\ac1.txt";
+                char[] array = saveFile.ToCharArray();
+                List<char> charList = new List<char>();
+                for (int i = 0; i < array.Length; i++)
+                {
+                    if (i == 0)
+                    {
+                        charList.Add(array[i]);
+                    }
+                    else
+                    {
+                        charList.Add('\0');
+                        charList.Add(array[i]);
+                    }
+                }
+                charList.Add('\0');
+                char[] charArray = charList.ToArray();
+                string SaveFilePATH = new string(charArray);
+                using (StreamWriter sw = new StreamWriter(path + @"\uMod\uMod_SaveFiles.txt"))
+                {
+                    sw.Write(SaveFilePATH);
                 }
                 await Task.Delay(1);
             }
