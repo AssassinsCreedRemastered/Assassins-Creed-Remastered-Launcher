@@ -76,6 +76,7 @@ namespace Assassins_Creed_Remastered_Launcher
                 if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\Ubisoft\Assassin's Creed\Path.txt"))
                 {
                     await PathMissing();
+                    await FixuModPaths();
                 }
                 else
                 {

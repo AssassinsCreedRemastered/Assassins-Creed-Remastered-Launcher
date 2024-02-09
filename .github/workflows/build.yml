@@ -1,13 +1,13 @@
-name: Build and Push as Prerelease
+name: Build and Push dev as Prerelease
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - master
+      - dev
   pull_request:
     branches:
-      - master
+      - dev
 
 jobs:
   build:
